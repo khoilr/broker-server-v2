@@ -1,0 +1,269 @@
+[
+    {
+        "name": "ADX",
+        "returns": [
+            {
+                "label": "Average Directional Index",
+                "name": "adx"
+            },
+            {
+                "label": "Plus Directional Index",
+                "name": "plus_di"
+            },
+            {
+                "label": "Minus Directional Index",
+                "name": "minus_di"
+            }
+        ]
+    },
+    {
+        "name": "Aroon",
+        "returns": [
+            {
+                "label": "Up",
+                "name": "up"
+            },
+            {
+                "label": "Down",
+                "name": "down"
+            }
+        ]
+    },
+    {
+        "name": "BB",
+        "returns": [
+            {
+                "label": "Upper Band",
+                "name": "ub"
+            },
+            {
+                "label": "Central Band",
+                "name": "cb"
+            },
+            {
+                "label": "Lower Band",
+                "name": "lb"
+            }
+        ]
+    },
+    {
+        "name": "ChandeKrollStop",
+        "returns": [
+            {
+                "label": "Short Stop",
+                "name": "short_stop"
+            },
+            {
+                "label": "Long Stop",
+                "name": "long_stop"
+            }
+        ]
+    },
+    {
+        "name": "DonchianChannels",
+        "returns": [
+            {
+                "label": "Upper Band",
+                "name": "ub"
+            },
+            {
+                "label": "Central Band",
+                "name": "cb"
+            },
+            {
+                "label": "Lower Band",
+                "name": "lb"
+            }
+        ]
+    },
+
+    {
+        "name": "Ichimoku",
+        "returns": [
+            {
+                "label": "Kijun Sen",
+                "name": "base_line"
+            },
+            {
+                "label": "Tenkan Sen",
+                "name": "conversion_line"
+            },
+            {
+                "label": "Chikou Span",
+                "name": "lagging_line"
+            },
+            {
+                "label": "Senkou Span Fast",
+                "name": "cloud_leading_fast_line"
+            },
+            {
+                "label": "Senkou Span Slow",
+                "name": "cloud_leading_slow_line"
+            }
+        ]
+    },
+
+    {
+        "name": "KST",
+        "returns": [
+            {
+                "label": "KST",
+                "name": "kst"
+            },
+            {
+                "label": "Signal",
+                "name": "signal"
+            }
+        ]
+    },
+    {
+        "name": "KeltnerChannels",
+        "returns": [
+            {
+                "label": "Upper Band",
+                "name": "ub"
+            },
+            {
+                "label": "Central Band",
+                "name": "cb"
+            },
+            {
+                "label": "Lower Band",
+                "name": "lb"
+            }
+        ]
+    },
+    {
+        "name": "MACD",
+        "returns": [
+            {
+                "label": "MACD",
+                "name": "macd"
+            },
+            {
+                "label": "Signal",
+                "name": "signal"
+            },
+            {
+                "label": "Histogram",
+                "name": "histogram"
+            }
+        ]
+    },
+    {
+        "name": "ParabolicSAR",
+        "returns": [
+            {
+                "label": "Value",
+                "name": "value"
+            },
+            {
+                "label": "Trend",
+                "name": "trend"
+            },
+            {
+                "label": "Ep",
+                "name": "ep"
+            },
+            {
+                "label": "Accel Factor",
+                "name": "accel_factor"
+            }
+        ]
+    },
+    {
+        "name": "PivotsHL",
+        "returns": [
+            {
+                "label": "OHLCV",
+                "name": "ohlcv"
+            },
+            {
+                "label": "HLType",
+                "name": "type"
+            }
+        ]
+    },
+    {
+        "name": "SFX",
+        "returns": [
+            {
+                "label": "ATR",
+                "name": "atr"
+            },
+            {
+                "label": "STD Dev",
+                "name": "std_dev"
+            },
+            {
+                "label": "SMA STD Dev",
+                "name": "sma_std_dev"
+            }
+        ]
+    },
+    {
+        "name": "Stoch",
+        "returns": [
+            {
+                "label": "K",
+                "name": "k"
+            },
+            {
+                "label": "D",
+                "name": "d"
+            }
+        ]
+    },
+    {
+        "name": "StochRSI",
+        "returns": [
+            {
+                "label": "K",
+                "name": "k"
+            },
+            {
+                "label": "D",
+                "name": "d"
+            }
+        ]
+    },
+    {
+        "name": "SuperTrend",
+        "returns": [
+            {
+                "label": "Value",
+                "name": "value"
+            },
+            {
+                "label": "Trend",
+                "name": "trend"
+            }
+        ]
+    },
+    {
+        "name": "TTM",
+        "returns": [
+            {
+                "label": "Squeeze",
+                "name": "squeeze"
+            },
+            {
+                "label": "Histogram",
+                "name": "histogram"
+            }
+        ]
+    },
+    {
+        "name": "VTX",
+        "returns": [
+            {
+                "label": "Plus VTX",
+                "name": "plus_vtx"
+            },
+            {
+                "label": "Minus VTX",
+                "name": "minus_vtx"
+            }
+        ]
+    }
+]
