@@ -57,6 +57,7 @@ async def main() -> None:
         log_level=settings.log_level.value.lower(),
         factory=True,
     )
+
     # server = Server(
     #     config=uvicorn.Config(
     #         "hihi.web.application:get_app",

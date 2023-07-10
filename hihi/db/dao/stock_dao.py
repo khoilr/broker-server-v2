@@ -60,3 +60,6 @@ class StockDAO:
 
     async def delete(self, market: str, symbol: str) -> None:
         await StockModel.filter(market=market, symbol=symbol).delete()
+
+    async def get_all(self) -> List[StockModel]:
+        return await StockModel.all()

@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 from hihi.db.models.predefined_indicator_model import PredefinedIndicatorModel
 
 
@@ -15,4 +15,10 @@ class PredefinedIndicatorDAO:
         return await PredefinedIndicatorModel.get_or_create(
             name=name,
             label=label,
+        )
+
+    async def get_all(self) -> List[PredefinedIndicatorModel]:
+        return await PredefinedIndicatorModel.all().prefetch_related(
+            "predefined_params",
+            "predefined_returns",
         )

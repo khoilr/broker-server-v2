@@ -3,6 +3,7 @@ from importlib import metadata
 
 import sentry_sdk
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import UJSONResponse
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
@@ -47,7 +48,19 @@ def get_app() -> FastAPI:
         default_response_class=UJSONResponse,
     )
 
-    # Configures tortoise orm.
+    # Add CORS middleware
+    regex_origin = "^http:\/\/103\.157\.218\.126.*"
+    origins = ["http://localhost:3000"]
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_origin_regex=regex_origin,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+    # Configures tortoise orm
     register_tortoise(
         app,
         config=TORTOISE_CONFIG,
