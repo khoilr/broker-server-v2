@@ -4,13 +4,7 @@ from datetime import datetime, timedelta
 from typing import Union
 
 
-class IndicatorDTOModel(BaseModel):
-    """
-    DTO for indicator models.
-
-    It returned when accessing indicator models from the API.
-    """
-
+class IndicatorInputDTOModel(BaseModel):
     symbol: str
     indicator: str
     from_date: Optional[str] = (datetime.now() - timedelta(days=30)).strftime("%d/%m/%Y")
@@ -22,19 +16,5 @@ class IndicatorDTOModel(BaseModel):
 
 
 class IndicatorOutputDTOModel(BaseModel):
-    """DTO for indicator models."""
-
     same_chart: bool
     data: Union[list, dict]
-
-
-# class IndicatorOutputDTOModel(BaseModel):
-#     """
-#     DTO for user models.
-
-#     It returned when accessing user models from the API.
-#     """
-
-
-#     class Config:
-#         orm_mode = False

@@ -5,12 +5,12 @@ from fastapi.param_functions import Depends
 
 from server.db.dao.user_dao import UserDAO
 from server.db.models.user_model import UserModel
-from server.web.api.user.schema import UserModelDTO, UserModelInputDTO
+from server.web.api.user.schema import UserOutputModelDTO, UserModelInputDTO
 
 router = APIRouter()
 
 
-@router.get("/", response_model=List[UserModelDTO])
+@router.get("/", response_model=List[UserOutputModelDTO])
 async def get_user_models(
     limit: int = 10,
     offset: int = 0,
@@ -27,7 +27,7 @@ async def get_user_models(
     return await user_dao.get_all(limit=limit, offset=offset)
 
 
-@router.post("/", response_model=UserModelDTO)
+@router.post("/", response_model=UserOutputModelDTO)
 async def create_user_model(
     new_user_object: UserModelInputDTO,
     user_dao: UserDAO = Depends(),

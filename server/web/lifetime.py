@@ -19,7 +19,7 @@ from opentelemetry.trace import set_tracer_provider
 from prometheus_fastapi_instrumentator.instrumentation import (
     PrometheusFastApiInstrumentator,
 )
-from server.utils.predefined_data import insert_data
+from server.utils.start_up import insert_data
 from server.services.redis.lifetime import init_redis, shutdown_redis
 from server.settings import settings
 
@@ -125,8 +125,8 @@ def register_startup_event(
         init_redis(app)
         # setup_prometheus(app)
 
-        # # Insert predefined data
-        # await insert_data()
+        # Insert predefined data
+        await insert_data()
 
         pass  # noqa: WPS420
 

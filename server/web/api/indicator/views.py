@@ -6,16 +6,16 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from server.db.dao.predefined_indicator_dao import PredefinedIndicatorDAO
 from server.db.models.predefined_param_model import PredefinedParamModel
-from server.utils.indicators import TechnicalAnalysis
+from server.utils.TechnicalAnalysis import TechnicalAnalysis
 from server.utils.ssi.DataClient import DataClient
-from server.web.api.indicator.schema import IndicatorDTOModel, IndicatorOutputDTOModel
+from server.web.api.indicator.schema import IndicatorInputDTOModel, IndicatorOutputDTOModel
 
 router = APIRouter()
 
 
 def extract_params(
     query_params: dict,
-    indicator_dto: IndicatorDTOModel,
+    indicator_dto: IndicatorInputDTOModel,
     predefined_params: list[PredefinedParamModel],
 ) -> dict:
     params = {}
@@ -23,10 +23,7 @@ def extract_params(
         if k in indicator_dto.dict():
             continue
 
-        print(k, v)
-
         predefined_param = next(filter(lambda x: x.name == k, predefined_params), None)
-
         if not predefined_param:
             continue
 
@@ -59,8 +56,8 @@ def extract_params(
 )
 async def calculate(
     request: Request,
-    indicator_dto: IndicatorDTOModel = Depends(),
-):
+    indicator_dto: IndicatorInputDTOModel = Depends(),
+) -> dict:
     # Get daily ohlc
     data_client = DataClient()
     daily_ohlc = data_client.daily_ohlc(

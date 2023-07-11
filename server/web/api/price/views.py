@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends
 from server.utils.ssi.DataClient import DataClient
-from server.web.api.price.schema import PriceModelDTO
+from server.web.api.price.schema import PriceInputModelDTO
 
 router = APIRouter()
 
 
 @router.get("/daily")
-async def get_daily_price(price_model_dto: PriceModelDTO = Depends()):
+async def get_daily_price(price_model_dto: PriceInputModelDTO = Depends()):
     data_client = DataClient()
     return data_client.daily_ohlc(
         symbol=price_model_dto.symbol,

@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from server.db.dao.user_dao import UserDAO
 from server.db.models.user_model import UserModel
 from server.utils import auth
-from server.web.api.user.schema import UserModelDTO
+from server.web.api.user.schema import UserOutputModelDTO
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 router = APIRouter()
@@ -41,7 +41,7 @@ async def sign_in(input_data: OAuth2PasswordRequestForm = Depends()):
 
 @router.post(
     "/sign-up",
-    response_model=UserModelDTO,
+    response_model=UserOutputModelDTO,
     status_code=status.HTTP_201_CREATED,
 )
 async def sign_up(
