@@ -2,6 +2,18 @@
 
 This project was generated using fastapi_template.
 
+## Database
+
+```bash
+docker run -d \
+  --name postgres \
+  -p 5432:5432 \
+  -e POSTGRES_USER=root \
+  -e POSTGRES_PASSWORD=khoikhoi \
+  -e POSTGRES_DB=broker \
+  postgres
+```
+
 ## Poetry
 
 This project uses poetry. It's a modern dependency management
