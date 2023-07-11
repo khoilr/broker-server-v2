@@ -1,14 +1,14 @@
-from functools import partial
 import json
-from pprint import pprint
+from functools import partial
+
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from server.utils.indicators import TechnicalAnalysis
-from server.utils.ssi.DataClient import DataClient
-from server.web.api.indicator.schema import IndicatorDTOModel
+
 from server.db.dao.predefined_indicator_dao import PredefinedIndicatorDAO
 from server.db.models.predefined_param_model import PredefinedParamModel
-
+from server.utils.indicators import TechnicalAnalysis
+from server.utils.ssi.DataClient import DataClient
+from server.web.api.indicator.schema import IndicatorDTOModel, IndicatorOutputDTOModel
 
 router = APIRouter()
 
@@ -23,7 +23,10 @@ def extract_params(
         if k in indicator_dto.dict():
             continue
 
+        print(k, v)
+
         predefined_param = next(filter(lambda x: x.name == k, predefined_params), None)
+
         if not predefined_param:
             continue
 
@@ -36,6 +39,8 @@ def extract_params(
             t = float
         elif predefined_param.type == "bool":
             t = lambda x: x.lower() in ["true", "1", "yes"]
+        else:
+            params[k] = v
 
         if t:
             try:
@@ -48,7 +53,10 @@ def extract_params(
     return params
 
 
-@router.get("/")
+@router.get(
+    "/",
+    response_model=IndicatorOutputDTOModel,
+)
 async def calculate(
     request: Request,
     indicator_dto: IndicatorDTOModel = Depends(),
@@ -76,27 +84,26 @@ async def calculate(
         query_params=request.query_params,
     )
 
+    # Input type
+    """Input type should be either OHLCV, Open, High, Low, Close, or Volume"""
+    input_values = params.pop("input_values")
+
     # Calculate indicator
     ta = TechnicalAnalysis(
         name=indicator_dto.indicator.upper(),
         kwargs=params,
     )
-    ta.add_inputs(prices=data, input_type="close")
+    ta.add_inputs(prices=data, input_values=input_values)
 
     # Get outputs
     try:
         output = ta.decompose()
-        print("decompose")
-        print(output)
         response = {
             "same_chart": False,
             "data": output,
         }
     except:
         output = ta.compose()
-        print("compose")
-        print(output)
-        print(type(output))
         response = {
             "same_chart": True,
             "data": output,

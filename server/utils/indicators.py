@@ -7,12 +7,12 @@ class TechnicalAnalysis:
         self.func = getattr(indicators, name)
         self.func = self.func(**kwargs)
 
-    def add_inputs(self, prices: dict, input_type: str):
-        if input_type == "OHLCV":
+    def add_inputs(self, prices: dict, input_values: str):
+        if input_values == "OHLCV":
             ohlcv = OHLCVFactory.from_dict(prices)
             input_values = ohlcv
         else:
-            input_values = [float(price[input_type.title()]) for price in prices]
+            input_values = [float(price[input_values.title()]) for price in prices]
 
         self.func.add_input_value(input_values)
 

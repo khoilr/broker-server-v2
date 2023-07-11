@@ -1,13 +1,14 @@
 from pydantic import BaseModel, validator
 from typing import Optional
 from datetime import datetime, timedelta
+from typing import Union
 
 
 class IndicatorDTOModel(BaseModel):
     """
-    DTO for user models.
+    DTO for indicator models.
 
-    It returned when accessing user models from the API.
+    It returned when accessing indicator models from the API.
     """
 
     symbol: str
@@ -19,11 +20,12 @@ class IndicatorDTOModel(BaseModel):
     class Config:
         orm_mode = False
 
-    # @validator("orient", pre=True, always=True)
-    # def set_default_orient(cls, orient):
-    #     if orient is None:
-    #         return "records"
-    #     return orient
+
+class IndicatorOutputDTOModel(BaseModel):
+    """DTO for indicator models."""
+
+    same_chart: bool
+    data: Union[list, dict]
 
 
 # class IndicatorOutputDTOModel(BaseModel):
