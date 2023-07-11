@@ -12,14 +12,20 @@ class TechnicalAnalysis:
             ohlcv = OHLCVFactory.from_dict(prices)
             input_values = ohlcv
         else:
-            input_values = [prices[input_values.title()]]
+            input_values = [float(price[input_type.title()]) for price in prices]
 
         self.func.add_input_value(input_values)
 
+    def compose(self):
+        return self.func.output_values
+
+    def decompose(self):
+        return self.func.to_lists()
+
     def get_outputs(self):
         try:
-            output = self.func.to_lists()
+            output = self.decompose()
         except:
-            output = self.func
+            output = self.compose()
 
         return output

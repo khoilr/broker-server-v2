@@ -13,13 +13,12 @@ class StockDAO:
         name: str,
         en_name: str,
     ) -> StockModel:
-        model = await StockModel.create(
+        return await StockModel.create(
             market=market,
             symbol=symbol,
             name=name,
             en_name=en_name,
         )
-        return model
 
     async def get(self, market: str, symbol: str) -> StockModel:
         return await StockModel.get(market=market, symbol=symbol)

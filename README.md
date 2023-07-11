@@ -16,6 +16,10 @@ docker run -d \
   postgres
 ```
 
+## Document
+
+Document for this project is available at <https://localhost:8000/api/redoc/>
+
 ## Poetry
 
 This project uses poetry. It's a modern dependency management
