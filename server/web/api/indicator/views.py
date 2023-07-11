@@ -15,6 +15,7 @@ async def calculate(
     request: Request,
     indicator_dto: IndicatorDTOModel = Depends(),
 ):
+    # get daily ohlc
     data_client = DataClient()
     daily_ohlc = data_client.daily_ohlc(
         indicator_dto.symbol,
@@ -24,10 +25,10 @@ async def calculate(
         page_size=100,
     )
     data = daily_ohlc["data"]
-    pprint(data)
+
     ta = TechnicalAnalysis(
-        indicator_dto.indicator,
-        request.query_params._dict,
+        name=indicator_dto.indicator,
+        kwargs=request.query_params._dict,
     )
     ta.add_input(daily_ohlc)
 
