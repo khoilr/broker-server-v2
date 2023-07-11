@@ -125,8 +125,8 @@ def register_startup_event(
         init_redis(app)
         # setup_prometheus(app)
 
-        # # Insert predefined data
-        # await insert_data()
+        # Insert predefined data
+        await insert_data()
 
         pass  # noqa: WPS420
 

@@ -4,6 +4,8 @@ This project was generated using fastapi_template.
 
 ## Database
 
+To start a database you can use docker.
+
 ```bash
 docker run -d \
   --name postgres \
@@ -19,10 +21,21 @@ docker run -d \
 This project uses poetry. It's a modern dependency management
 tool.
 
-To run the project use this set of commands:
+To install packages use this command:
 
 ```bash
 poetry install
+```
+
+To add new packages use this command:
+
+```bash
+poetry add <package_name>
+```
+
+To run the project use this set of commands:
+
+```bash
 poetry run python -m server
 ```
 

@@ -30,10 +30,10 @@ async def insert_predefined_data():
                 name=indicator_name,
                 label=inspect.getdoc(getattr(indicators, indicator_name)).split("\n")[0],
             )
-            if created:
-                print(f"Created indicator {indicator_name}")
-            else:
-                print(f"Found indicator {indicator_name}")
+            # if created:
+            #     print(f"Created indicator {indicator_name}")
+            # else:
+            #     print(f"Found indicator {indicator_name}")
 
             predefined_param_dao = PredefinedParamDAO()
             parameters = inspect.signature(getattr(indicators, indicator_name)).parameters
@@ -45,10 +45,10 @@ async def insert_predefined_data():
                         predefined_indicator=predefined_indicator,
                         _type=str(parameters[parameter_name]).split(":")[1].split("=")[0].strip(),
                     )
-                    if created:
-                        print(f"Created parameter {parameter_name} for indicator {indicator_name}")
-                    else:
-                        print(f"Found parameter {parameter_name} for indicator {indicator_name}")
+                    # if created:
+                    #     print(f"Created parameter {parameter_name} for indicator {indicator_name}")
+                    # else:
+                    #     print(f"Found parameter {parameter_name} for indicator {indicator_name}")
 
             predefined_return_dao = PredefinedReturnDAO()
             indicator_json = next((item for item in data if item["name"] == indicator_name), None)
@@ -63,10 +63,10 @@ async def insert_predefined_data():
                         label=label,
                         predefined_indicator=predefined_indicator,
                     )
-                    if created:
-                        print(f"Created return {name} for indicator {indicator_name}")
-                    else:
-                        print(f"Found return {name} for indicator {indicator_name}")
+                    # if created:
+                    #     print(f"Created return {name} for indicator {indicator_name}")
+                    # else:
+                    #     print(f"Found return {name} for indicator {indicator_name}")
 
 
 async def insert_stock():
@@ -103,10 +103,10 @@ async def insert_stock():
                     name=stock["StockName"],
                     en_name=stock["StockEnName"],
                 )
-                if created:
-                    print(f"Created Stock instance for {symbol} in {market}")
-                else:
-                    print(f"Found Stock instance for {symbol} in {market}")
+                # if created:
+                #     print(f"Created Stock instance for {symbol} in {market}")
+                # else:
+                #     print(f"Found Stock instance for {symbol} in {market}")
 
             if stock_count >= total_records:
                 break
