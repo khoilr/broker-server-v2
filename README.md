@@ -193,11 +193,11 @@ For running tests on your local machine.
 
 I prefer doing it with docker:
 
-```
+``` bash
 docker run -p "5432:5432" -e "POSTGRES_PASSWORD=server" -e "POSTGRES_USER=server" -e "POSTGRES_DB=server" postgres:13.8-bullseye
 ```
 
-2. Run the pytest.
+1. Run the pytest.
 
 ```bash
 pytest -vv .
