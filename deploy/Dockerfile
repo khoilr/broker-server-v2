@@ -27,7 +27,7 @@ RUN poetry install --only main
 # Install ssi_fc_data
 RUN pip install /app/src/packages/ssi_fc_data-2.0.0/ssi_fc_data-2.0.0.tar.gz
 
-CMD ["/usr/local/bin/python", "-m", "hihi"]
+CMD ["/usr/local/bin/python", "-m", "server"]
 
 FROM prod as dev
 

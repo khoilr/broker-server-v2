@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "hihi"
+name = "server"
 version = "0.1.0"
 description = ""
 authors = [
@@ -64,7 +64,7 @@ httpx = "^0.23.3"
 [tool.isort]
 profile = "black"
 multi_line_output = 3
-src_paths = ["hihi",]
+src_paths = ["server",]
 
 [tool.mypy]
 strict = true
@@ -94,17 +94,17 @@ filterwarnings = [
     "ignore:.*unclosed.*:ResourceWarning",
 ]
 env = [
-    "HIHI_ENVIRONMENT=pytest",
-    "HIHI_DB_BASE=hihi_test",
-    "HIHI_SENTRY_DSN=",
+    "SERVER_ENVIRONMENT=pytest",
+    "SERVER_DB_BASE=server_test",
+    "SERVER_SENTRY_DSN=",
 ]
 [tool.aerich]
-tortoise_orm = "hihi.db.config.TORTOISE_CONFIG"
-location = "./hihi/db/migrations"
-src_folder = "./hihi"
+tortoise_orm = "server.db.config.TORTOISE_CONFIG"
+location = "./server/db/migrations"
+src_folder = "./server"
 
 [fastapi-template.options]
-project_name = "hihi"
+project_name = "server"
 api_type = "rest"
 enable_redis = "True"
 enable_rmq = "None"
@@ -112,7 +112,7 @@ ci_type = "none"
 enable_migrations = "True"
 enable_taskiq = "None"
 enable_kube = "None"
-kube_name = "hihi"
+kube_name = "server"
 enable_routers = "True"
 enable_kafka = "None"
 enable_loguru = "None"

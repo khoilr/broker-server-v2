@@ -6,67 +6,67 @@ services:
       context: .
       dockerfile: ./deploy/Dockerfile
       target: prod
-    image: hihi:${HIHI_VERSION:-latest}
+    image: server:${SERVER_VERSION:-latest}
     restart: always
     env_file:
-    - .env
+      - .env
     labels:
       # Enables traefik for this container.
-    - traefik.enable=true
-    - traefik.http.routers.hihi.rule=Host(`${HIHI_TRAEFIK_HOST:-hihi.localhost}`)
-    - traefik.http.routers.hihi.entrypoints=http
-    - traefik.http.routers.hihi.service=hihi
-    - traefik.http.services.hihi.loadbalancer.server.port=${HIHI_PORT:-8000}
+      - traefik.enable=true
+      - traefik.http.routers.server.rule=Host(`${SERVER_TRAEFIK_HOST:-server.localhost}`)
+      - traefik.http.routers.server.entrypoints=http
+      - traefik.http.routers.server.service=server
+      - traefik.http.services.server.loadbalancer.server.port=${SERVER_PORT:-8000}
     networks:
-    - default
-    - traefik-shared
+      - default
+      - traefik-shared
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
     environment:
-      HIHI_HOST: 0.0.0.0
-      HIHI_DB_HOST: hihi-db
-      HIHI_DB_PORT: 5432
-      HIHI_DB_USER: hihi
-      HIHI_DB_PASS: hihi
-      HIHI_DB_BASE: hihi
-      HIHI_REDIS_HOST: hihi-redis
+      SERVER_HOST: 0.0.0.0
+      SERVER_DB_HOST: server-db
+      SERVER_DB_PORT: 5432
+      SERVER_DB_USER: server
+      SERVER_DB_PASS: server
+      SERVER_DB_BASE: server
+      SERVER_REDIS_HOST: server-redis
 
   db:
     image: postgres:13.8-bullseye
-    hostname: hihi-db
+    hostname: server-db
     environment:
-      POSTGRES_PASSWORD: "hihi"
-      POSTGRES_USER: "hihi"
-      POSTGRES_DB: "hihi"
+      POSTGRES_PASSWORD: "server"
+      POSTGRES_USER: "server"
+      POSTGRES_DB: "server"
     volumes:
-    - hihi-db-data:/var/lib/postgresql/data
+      - server-db-data:/var/lib/postgresql/data
     restart: always
     healthcheck:
-      test: pg_isready -U hihi
+      test: pg_isready -U server
       interval: 2s
       timeout: 3s
       retries: 40
 
   migrator:
-    image: hihi:${HIHI_VERSION:-latest}
+    image: server:${SERVER_VERSION:-latest}
     restart: "no"
     command: aerich upgrade
     environment:
-      HIHI_DB_HOST: hihi-db
-      HIHI_DB_PORT: 5432
-      HIHI_DB_USER: hihi
-      HIHI_DB_PASS: hihi
-      HIHI_DB_BASE: hihi
+      SERVER_DB_HOST: server-db
+      SERVER_DB_PORT: 5432
+      SERVER_DB_USER: server
+      SERVER_DB_PASS: server
+      SERVER_DB_BASE: server
     depends_on:
       db:
         condition: service_healthy
 
   redis:
     image: bitnami/redis:6.2.5
-    hostname: "hihi-redis"
+    hostname: "server-redis"
     restart: always
     environment:
       ALLOW_EMPTY_PASSWORD: "yes"
@@ -76,11 +76,9 @@ services:
       timeout: 3s
       retries: 50
 
-
-
 volumes:
-  hihi-db-data:
-    name: hihi-db-data
+  server-db-data:
+    name: server-db-data
 
 networks:
   # Network for traefik.

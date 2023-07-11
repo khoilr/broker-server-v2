@@ -1,4 +1,4 @@
-# hihi
+# server
 
 This project was generated using fastapi_template.
 
@@ -11,7 +11,7 @@ To run the project use this set of commands:
 
 ```bash
 poetry install
-poetry run python -m hihi
+poetry run python -m server
 ```
 
 This will start the server on the configured host.
@@ -46,8 +46,8 @@ docker-compose -f deploy/docker-compose.yml --project-directory . build
 ## Project structure
 
 ```bash
-$ tree "hihi"
-hihi
+$ tree "server"
+server
 ├── conftest.py  # Fixtures for all tests.
 ├── db  # module contains db configurations
 │   ├── dao  # Data Access Objects. Contains different classes to interact with database.
@@ -71,19 +71,19 @@ This application can be configured with environment variables.
 You can create `.env` file in the root directory and place all
 environment variables here.
 
-All environment variables should start with "HIHI_" prefix.
+All environment variables should start with "SERVER_" prefix.
 
-For example if you see in your "hihi/settings.py" a variable named like
-`random_parameter`, you should provide the "HIHI_RANDOM_PARAMETER"
+For example if you see in your "server/settings.py" a variable named like
+`random_parameter`, you should provide the "SERVER_RANDOM_PARAMETER"
 variable to configure the value. This behaviour can be changed by overriding `env_prefix` property
-in `hihi.settings.Settings.Config`.
+in `server.settings.Settings.Config`.
 
 An example of .env file:
 
 ```bash
-HIHI_RELOAD="True"
-HIHI_PORT="8000"
-HIHI_ENVIRONMENT="dev"
+SERVER_RELOAD="True"
+SERVER_PORT="8000"
+SERVER_ENVIRONMENT="dev"
 ```
 
 You can read more about BaseSettings class here: <https://pydantic-docs.helpmanual.io/usage/settings/>
@@ -169,7 +169,7 @@ For running tests on your local machine.
 I prefer doing it with docker:
 
 ```
-docker run -p "5432:5432" -e "POSTGRES_PASSWORD=hihi" -e "POSTGRES_USER=hihi" -e "POSTGRES_DB=hihi" postgres:13.8-bullseye
+docker run -p "5432:5432" -e "POSTGRES_PASSWORD=server" -e "POSTGRES_USER=server" -e "POSTGRES_DB=server" postgres:13.8-bullseye
 ```
 
 2. Run the pytest.
