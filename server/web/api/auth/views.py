@@ -2,7 +2,6 @@ import json
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from pydantic import BaseModel
 
 from server.db.dao.user_dao import UserDAO
 from server.db.models.user_model import UserModel

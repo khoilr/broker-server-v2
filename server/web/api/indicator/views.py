@@ -1,13 +1,12 @@
 import json
 from functools import partial
 
-from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import APIRouter, Depends, HTTPException, Request
 
 from server.db.dao.predefined_indicator_dao import PredefinedIndicatorDAO
 from server.db.models.predefined_param_model import PredefinedParamModel
-from server.utils.TechnicalAnalysis import TechnicalAnalysis
 from server.utils.ssi.DataClient import DataClient
+from server.utils.TechnicalAnalysis import TechnicalAnalysis
 from server.web.api.indicator.schema import IndicatorInputDTOModel, IndicatorOutputDTOModel
 
 router = APIRouter()
