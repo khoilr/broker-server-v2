@@ -1,4 +1,5 @@
 from typing import Union
+
 from talipp import indicators
 from talipp.ohlcv import OHLCVFactory
 
