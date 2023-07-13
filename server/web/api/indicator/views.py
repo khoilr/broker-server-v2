@@ -1,13 +1,16 @@
-import json
 from functools import partial
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 
 from server.db.dao.predefined_indicator_dao import PredefinedIndicatorDAO
+from server.db.dao.predefined_return_dao import PredefinedReturnDAO
 from server.db.models.predefined_param_model import PredefinedParamModel
 from server.utils.ssi.DataClient import DataClient
 from server.utils.TechnicalAnalysis import TechnicalAnalysis
-from server.web.api.indicator.schema import IndicatorInputDTOModel, IndicatorOutputDTOModel
+from server.web.api.indicator.schema import (
+    IndicatorInputDTOModel,
+    IndicatorOutputDTOModel,
+)
 
 router = APIRouter()
 
@@ -49,6 +52,32 @@ def extract_params(
     return params
 
 
+def get_price(indicator_dto: IndicatorInputDTOModel) -> str:
+    data_client = DataClient()
+    daily_ohlc = data_client.daily_ohlc(
+        symbol=indicator_dto.symbol,
+        from_date=indicator_dto.from_date,
+        to_date=indicator_dto.to_date,
+        page_index=1,
+        page_size=100,
+    )
+    data = daily_ohlc["data"]
+    return data
+
+
+async def get_return_data(k: str, v: list, predefined_indicator):
+    predefined_return_dao = PredefinedReturnDAO()
+    predefined_return = await predefined_return_dao.get(
+        name=k,
+        predefined_indicator=predefined_indicator,
+    )
+    return {
+        "data": v,
+        "name": predefined_return.name,
+        "label": predefined_return.label,
+    }
+
+
 @router.get(
     "/",
     response_model=IndicatorOutputDTOModel,
@@ -57,20 +86,11 @@ async def calculate(
     request: Request,
     indicator_dto: IndicatorInputDTOModel = Depends(),
 ) -> dict:
-    # Get daily ohlc
-    data_client = DataClient()
-    daily_ohlc = data_client.daily_ohlc(
-        indicator_dto.symbol,
-        indicator_dto.from_date,
-        to_date=indicator_dto.to_date,
-        page_index=1,
-        page_size=100,
-    )
-    data = daily_ohlc["data"]
-
     # Get predefined indicator
     predefined_indicator_dao = PredefinedIndicatorDAO()
-    predefined_indicator = await predefined_indicator_dao.get(name=indicator_dto.indicator.upper())
+    predefined_indicator = await predefined_indicator_dao.get(
+        name=indicator_dto.indicator,
+    )
 
     # Extract parameters
     predefined_params = await predefined_indicator.predefined_params
@@ -84,26 +104,42 @@ async def calculate(
     """Input type should be either OHLCV, Open, High, Low, Close, or Volume"""
     input_values = params.pop("input_values")
 
-    # Calculate indicator
+    # Init indicator
     ta = TechnicalAnalysis(
-        name=indicator_dto.indicator.upper(),
-        kwargs=params,
+        name=indicator_dto.indicator,
+        params=params,
     )
+
+    # Add price data
+    data = get_price(indicator_dto=indicator_dto)
     ta.add_inputs(prices=data, input_values=input_values)
 
     # Get outputs
     try:
         output = ta.decompose()
+        data = [
+            await get_return_data(k, v, predefined_indicator) for k, v in output.items()
+        ]
         response = {
             "same_chart": False,
-            "data": output,
+            "data": data,
+            "label": predefined_indicator.label,
+            "name": predefined_indicator.name,
         }
     except:
         output = ta.compose()
         response = {
             "same_chart": True,
-            "data": output,
+            "data": [
+                {
+                    "data": output,
+                    "label": predefined_indicator.label,
+                    "name": predefined_indicator.name,
+                },
+            ],
         }
+
+    print(response)
 
     # Return response
     return response

@@ -1,5 +1,7 @@
-from pydantic import BaseModel
 from datetime import datetime
+
+from pydantic import BaseModel
+
 from server.web.api.predefined_param.schema import PredefinedParamOutputModelDTO
 from server.web.api.predefined_return.schema import PredefinedReturnOutputModelDTO
 

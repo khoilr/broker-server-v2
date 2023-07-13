@@ -1,14 +1,14 @@
 import json
+import time
+
 import gevent
 from signalr.events import EventHook
 from signalr.hubs import Hub
 from signalr.transports import AutoTransport
-import traceback
-import time
-import threading
+
 
 class Connection:
-    protocol_version = '1.5'
+    protocol_version = "1.5"
 
     def __init__(self, url, session):
         self.url = url
@@ -38,12 +38,12 @@ class Connection:
         self.starting += self.__set_data
 
     def __set_data(self):
-        self.data = json.dumps([{'name': hub_name} for hub_name in self.__hubs])
+        self.data = json.dumps([{"name": hub_name} for hub_name in self.__hubs])
 
     def increment_send_counter(self):
         self.__send_counter += 1
         return self.__send_counter
-    
+
     def reset_session(self, new_session):
         self.__transport = AutoTransport(new_session, self)
 
@@ -51,7 +51,7 @@ class Connection:
         self.starting.fire()
 
         negotiate_data = self.__transport.negotiate()
-        self.token = negotiate_data['ConnectionToken']
+        self.token = negotiate_data["ConnectionToken"]
 
         listener = self.__transport.start()
 
@@ -61,13 +61,17 @@ class Connection:
                 gevent.sleep()
                 self.is_reset_connection = False
             except Exception as e:
-                if '10054' in str(e):
+                if "10054" in str(e):
                     # traceback.print_exc()
-                    print("Exception: ", e, "will cause connection break => try to reconnect")
+                    print(
+                        "Exception: ",
+                        e,
+                        "will cause connection break => try to reconnect",
+                    )
                     print("This process can make application lose some data and time")
                     time.sleep(1)
-                    if i<5:
-                        wrapped_listener(i+1)
+                    if i < 5:
+                        wrapped_listener(i + 1)
                     else:
                         print(e)
                         self.is_reset_connection = True
@@ -95,7 +99,8 @@ class Connection:
         if name not in self.__hubs:
             if self.started:
                 raise RuntimeError(
-                    'Cannot create new hub because connection is already started.')
+                    "Cannot create new hub because connection is already started.",
+                )
 
             self.__hubs[name] = Hub(name, self)
         return self.__hubs[name]

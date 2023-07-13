@@ -1,10 +1,7 @@
 import json
-import time
 from datetime import datetime
-from typing import Callable
 
 import requests
-from requests import Session
 
 from server.utils.ssi import config, constants
 

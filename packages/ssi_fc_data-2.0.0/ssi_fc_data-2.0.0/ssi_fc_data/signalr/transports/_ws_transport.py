@@ -9,6 +9,7 @@ else:
     from urllib.parse import urlparse, urlunparse
 
 from websocket import create_connection
+
 from ._transport import Transport
 
 
@@ -19,24 +20,33 @@ class WebSocketsTransport(Transport):
         self.__requests = {}
 
     def _get_name(self):
-        return 'webSockets'
+        return "webSockets"
 
     @staticmethod
     def __get_ws_url_from(url):
         parsed = urlparse(url)
-        scheme = 'wss' if parsed.scheme == 'https' else 'ws'
-        url_data = (scheme, parsed.netloc, parsed.path, parsed.params, parsed.query, parsed.fragment)
+        scheme = "wss" if parsed.scheme == "https" else "ws"
+        url_data = (
+            scheme,
+            parsed.netloc,
+            parsed.path,
+            parsed.params,
+            parsed.query,
+            parsed.fragment,
+        )
 
         return urlunparse(url_data)
 
     def start(self):
-        ws_url = self.__get_ws_url_from(self._get_url('connect'))
+        ws_url = self.__get_ws_url_from(self._get_url("connect"))
 
-        self.ws = create_connection(ws_url,
-                                    header=self.__get_headers(),
-                                    cookie=self.__get_cookie_str(),
-                                    enable_multithread=True)
-        self._session.get(self._get_url('start'))
+        self.ws = create_connection(
+            ws_url,
+            header=self.__get_headers(),
+            cookie=self.__get_cookie_str(),
+            enable_multithread=True,
+        )
+        self._session.get(self._get_url("start"))
 
         def _receive():
             for notification in self.ws:
@@ -52,7 +62,7 @@ class WebSocketsTransport(Transport):
         self.ws.close()
 
     def accept(self, negotiate_data):
-        return bool(negotiate_data['TryWebSockets'])
+        return bool(negotiate_data["TryWebSockets"])
 
     class HeadersLoader(object):
         def __init__(self, headers):
@@ -65,10 +75,9 @@ class WebSocketsTransport(Transport):
         if self._session.auth:
             self._session.auth(loader)
 
-        return ['%s: %s' % (name, headers[name]) for name in headers]
+        return ["%s: %s" % (name, headers[name]) for name in headers]
 
     def __get_cookie_str(self):
-        return '; '.join([
-                             '%s=%s' % (name, value)
-                             for name, value in self._session.cookies.items()
-                             ])
+        return "; ".join(
+            ["%s=%s" % (name, value) for name, value in self._session.cookies.items()],
+        )

@@ -1,8 +1,4 @@
-import json
-
-from fastapi import APIRouter, Depends, HTTPException, Response, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends
 
 from server.db.dao.stock_dao import StockDAO
 from server.db.models.stock_model import StockModel

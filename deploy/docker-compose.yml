@@ -9,17 +9,17 @@ services:
     image: server:${SERVER_VERSION:-latest}
     restart: always
     env_file:
-      - .env
+    - .env
     labels:
       # Enables traefik for this container.
-      - traefik.enable=true
-      - traefik.http.routers.server.rule=Host(`${SERVER_TRAEFIK_HOST:-server.localhost}`)
-      - traefik.http.routers.server.entrypoints=http
-      - traefik.http.routers.server.service=server
-      - traefik.http.services.server.loadbalancer.server.port=${SERVER_PORT:-8000}
+    - traefik.enable=true
+    - traefik.http.routers.server.rule=Host(`${SERVER_TRAEFIK_HOST:-server.localhost}`)
+    - traefik.http.routers.server.entrypoints=http
+    - traefik.http.routers.server.service=server
+    - traefik.http.services.server.loadbalancer.server.port=${SERVER_PORT:-8000}
     networks:
-      - default
-      - traefik-shared
+    - default
+    - traefik-shared
     depends_on:
       db:
         condition: service_healthy
@@ -42,7 +42,7 @@ services:
       POSTGRES_USER: "server"
       POSTGRES_DB: "server"
     volumes:
-      - server-db-data:/var/lib/postgresql/data
+    - server-db-data:/var/lib/postgresql/data
     restart: always
     healthcheck:
       test: pg_isready -U server

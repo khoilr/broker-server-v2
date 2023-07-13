@@ -1,5 +1,5 @@
-from ._transport import Transport
 from ._sse_transport import ServerSentEventsTransport
+from ._transport import Transport
 from ._ws_transport import WebSocketsTransport
 
 
@@ -8,7 +8,7 @@ class AutoTransport(Transport):
         Transport.__init__(self, session, connection)
         self.__available_transports = [
             WebSocketsTransport(session, connection),
-            ServerSentEventsTransport(session, connection)
+            ServerSentEventsTransport(session, connection),
         ]
         self.__transport = None
 
@@ -22,7 +22,7 @@ class AutoTransport(Transport):
         for transport in self.__available_transports:
             if transport.accept(negotiate_data):
                 return transport
-        raise Exception('Cannot find suitable transport')
+        raise Exception("Cannot find suitable transport")
 
     def start(self):
         return self.__transport.start()
@@ -34,4 +34,4 @@ class AutoTransport(Transport):
         self.__transport.close()
 
     def _get_name(self):
-        return 'auto'
+        return "auto"

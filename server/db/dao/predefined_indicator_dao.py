@@ -1,4 +1,5 @@
 from typing import List
+
 from server.db.models.predefined_indicator_model import PredefinedIndicatorModel
 
 

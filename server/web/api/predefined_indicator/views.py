@@ -1,7 +1,8 @@
 from typing import List
+
 from fastapi import APIRouter, Depends
+
 from server.db.dao.predefined_indicator_dao import PredefinedIndicatorDAO
-from server.db.models.predefined_indicator_model import PredefinedIndicatorModel
 from server.web.api.predefined_indicator.schema import PredefinedIndicatorOutputModelDTO
 
 router = APIRouter()
@@ -11,7 +12,9 @@ router = APIRouter()
     "/",
     response_model=List[PredefinedIndicatorOutputModelDTO],
 )
-async def get_predefined_indicators(predefined_indicator_dao: PredefinedIndicatorDAO = Depends()):
+async def get_predefined_indicators(
+    predefined_indicator_dao: PredefinedIndicatorDAO = Depends(),
+):
     predefined_indicators = await predefined_indicator_dao.get_all()
     data = [
         {

@@ -50,5 +50,8 @@ class MarketDataStream(SSI):
 
 if __name__ == "__main__":
     selected_channel = "B:ALL"
-    market_data_stream = MarketDataStream(on_message=lambda x: print(json.loads(x)), on_error=lambda x: print(x))
+    market_data_stream = MarketDataStream(
+        on_message=lambda x: print(json.loads(x)),
+        on_error=lambda x: print(x),
+    )
     market_data_stream.start(selected_channel)

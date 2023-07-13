@@ -10,7 +10,10 @@ class PredefinedParamModel(models.Model):
     updated_at = fields.DatetimeField(auto_now=True)
     type = fields.CharField(max_length=32)
     # Relationship
-    predefined_indicator = fields.ForeignKeyField("models.PredefinedIndicatorModel", related_name="predefined_params")
+    predefined_indicator = fields.ForeignKeyField(
+        "models.PredefinedIndicatorModel",
+        related_name="predefined_params",
+    )
     params = fields.ReverseRelation["models.ParamModel"]
 
     class Meta:

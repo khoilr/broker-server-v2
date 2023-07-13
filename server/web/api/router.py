@@ -1,6 +1,15 @@
 from fastapi.routing import APIRouter
 
-from server.web.api import dummy, monitoring, redis, auth, indicator, stock, predefined_indicator, price
+from server.web.api import (
+    auth,
+    dummy,
+    indicator,
+    monitoring,
+    predefined_indicator,
+    price,
+    redis,
+    stock,
+)
 
 api_router = APIRouter()
 api_router.include_router(monitoring.router)

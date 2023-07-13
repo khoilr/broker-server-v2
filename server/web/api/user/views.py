@@ -5,7 +5,7 @@ from fastapi.param_functions import Depends
 
 from server.db.dao.user_dao import UserDAO
 from server.db.models.user_model import UserModel
-from server.web.api.user.schema import UserOutputModelDTO, UserModelInputDTO
+from server.web.api.user.schema import UserModelInputDTO, UserOutputModelDTO
 
 router = APIRouter()
 

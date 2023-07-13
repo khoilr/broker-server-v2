@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import Annotated, Optional
+from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -21,7 +21,9 @@ async def get_user(username: str):
     return await UserDAO.get(None, username)
 
 
-async def get_current_active_user(current_user: Annotated[UserModel, Depends(get_user)]):
+async def get_current_active_user(
+    current_user: Annotated[UserModel, Depends(get_user)],
+):
     return UserDAO.get(None, current_user.username)
 
 

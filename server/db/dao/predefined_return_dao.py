@@ -1,5 +1,3 @@
-from typing import List, Optional
-
 from server.db.models.predefined_indicator_model import PredefinedIndicatorModel
 from server.db.models.predefined_return_model import PredefinedReturnModel
 
@@ -20,7 +18,11 @@ class PredefinedReturnDAO:
         )
         return model
 
-    async def get(self, name: str, predefined_indicator: PredefinedIndicatorModel) -> PredefinedReturnModel:
+    async def get(
+        self,
+        name: str,
+        predefined_indicator: PredefinedIndicatorModel,
+    ) -> PredefinedReturnModel:
         return await PredefinedReturnModel.get(
             name=name,
             predefined_indicator=predefined_indicator,

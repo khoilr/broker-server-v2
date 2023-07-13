@@ -24,7 +24,7 @@ async def sign_in(input_data: OAuth2PasswordRequestForm = Depends()):
         {
             "access_token": input_data.username,
             "token_type": "bearer",
-        }
+        },
     )
 
     # Create response

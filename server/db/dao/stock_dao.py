@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 from server.db.models.stock_model import StockModel
 

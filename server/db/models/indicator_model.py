@@ -9,7 +9,10 @@ class IndicatorModel(models.Model):
 
     # Relationships
     strategy = fields.ForeignKeyField("models.StrategyModel", related_name="indicators")
-    predefined_indicator = fields.ForeignKeyField("models.PredefinedIndicatorModel", related_name="indicators")
+    predefined_indicator = fields.ForeignKeyField(
+        "models.PredefinedIndicatorModel",
+        related_name="indicators",
+    )
     params = fields.ReverseRelation["models.ParamModel"]
     condition = fields.ReverseRelation["models.ConditionModel"]
 

@@ -1,7 +1,6 @@
 from typing import List, Optional, Union
 
 from server.db.models.user_model import UserModel
-from server.db.models.telegram_model import TelegramModel
 
 
 class UserDAO:

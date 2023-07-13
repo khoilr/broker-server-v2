@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+
 from server.utils.ssi.DataClient import DataClient
 from server.web.api.price.schema import PriceInputModelDTO
 

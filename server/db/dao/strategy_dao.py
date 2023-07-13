@@ -1,6 +1,6 @@
+from server.db.models.stock_model import StockModel
 from server.db.models.strategy_model import StrategyModel
 from server.db.models.user_model import UserModel
-from server.db.models.stock_model import StockModel
 
 
 class StrategyDAO:

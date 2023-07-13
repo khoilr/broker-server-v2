@@ -150,5 +150,5 @@ if __name__ == "__main__":
             market="HOSE",
             page_index=1,
             page_size=10,
-        )
+        ),
     )

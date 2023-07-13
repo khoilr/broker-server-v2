@@ -1,21 +1,3 @@
-# from pony.orm import Required
-
-# from database import db
-
-
-# class Condition(db.Entity):
-#     # Table name
-#     _table_ = "conditions"
-
-#     # Attributes
-#     source = Required(str, max_len=50)
-#     change = Required(str, max_len=50)
-#     value = Required(str, max_len=50)
-#     unit = Required(str, max_len=50)
-
-#     # Relations
-#     indicator = Required("Indicator", unique=True)
-
 from tortoise import fields, models
 
 

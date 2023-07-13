@@ -22,8 +22,14 @@ class ParameterModel(models.Model):
     value = fields.CharField(max_length=50)
 
     # Relationships
-    indicator = fields.ForeignKeyField("models.IndicatorModel", related_name="parameters")
-    predefined_param = fields.ForeignKeyField("models.PredefinedParamModel", related_name="parameters")
+    indicator = fields.ForeignKeyField(
+        "models.IndicatorModel",
+        related_name="parameters",
+    )
+    predefined_param = fields.ForeignKeyField(
+        "models.PredefinedParamModel",
+        related_name="parameters",
+    )
 
     class Meta:
         table = "parameters"

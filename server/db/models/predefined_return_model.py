@@ -10,7 +10,10 @@ class PredefinedReturnModel(models.Model):
     updated_at = fields.DatetimeField(auto_now=True)
 
     # Relationship
-    predefined_indicator = fields.ForeignKeyField("models.PredefinedIndicatorModel", related_name="predefined_returns")
+    predefined_indicator = fields.ForeignKeyField(
+        "models.PredefinedIndicatorModel",
+        related_name="predefined_returns",
+    )
 
     class Meta:
         table = "predefined_returns"

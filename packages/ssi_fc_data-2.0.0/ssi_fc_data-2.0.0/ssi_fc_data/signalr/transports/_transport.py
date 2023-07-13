@@ -1,6 +1,6 @@
-from abc import abstractmethod
 import json
 import sys
+from abc import abstractmethod
 
 if sys.version_info[0] < 3:
     from urllib import quote_plus
@@ -20,9 +20,11 @@ class Transport:
         pass
 
     def negotiate(self):
-        url = self.__get_base_url(self._connection,
-                                  'negotiate',
-                                  connectionData=self._connection.data)
+        url = self.__get_base_url(
+            self._connection,
+            "negotiate",
+            connectionData=self._connection.data,
+        )
         negotiate = self._session.get(url)
 
         negotiate.raise_for_status()
@@ -52,9 +54,9 @@ class Transport:
 
     def _get_url(self, action, **kwargs):
         args = kwargs.copy()
-        args['transport'] = self._get_name()
-        args['connectionToken'] = self._connection.token
-        args['connectionData'] = self._connection.data
+        args["transport"] = self._get_name()
+        args["connectionToken"] = self._connection.token
+        args["connectionData"] = self._connection.data
 
         return self.__get_base_url(self._connection, action, **args)
 
@@ -62,9 +64,16 @@ class Transport:
     def __get_base_url(connection, action, **kwargs):
         args = kwargs.copy()
         args.update(connection.qs)
-        args['clientProtocol'] = connection.protocol_version
-        query = '&'.join(['{key}={value}'.format(key=key, value=quote_plus(args[key])) for key in args])
+        args["clientProtocol"] = connection.protocol_version
+        query = "&".join(
+            [
+                "{key}={value}".format(key=key, value=quote_plus(args[key]))
+                for key in args
+            ],
+        )
 
-        return '{url}/{action}?{query}'.format(url=connection.url,
-                                               action=action,
-                                               query=query)
+        return "{url}/{action}?{query}".format(
+            url=connection.url,
+            action=action,
+            query=query,
+        )

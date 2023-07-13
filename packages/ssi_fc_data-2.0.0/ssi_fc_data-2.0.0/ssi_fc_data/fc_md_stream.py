@@ -3,88 +3,82 @@ import time
 
 from requests import Session
 
+from .model import api, constants
 from .signalr import Connection
-from .model import api
-from .model import constants
 
 
 class MarketDataStream(object):
+    def __init__(self, _config):
 
-	def __init__(self, _config):
+        self._config = _config
+        self._handlers = []
+        self._error_handlers = []
 
-		self._config = _config
-		self._handlers = []
-		self._error_handlers = []
+    def _on_message(self, _message):
 
+        _message = json.loads(_message)
 
-	def _on_message(self, _message):
+        try:
 
-		_message = json.loads(_message)
+            for _handler in self._handlers:
 
-		try:
+                _handler(_message)
 
-			for _handler in self._handlers:
+        except:
 
-				_handler(_message)
+            raise Exception(constants.RECEIVE_ERROR_MESSAGE)
 
-		except:
-			
-			raise Exception(constants.RECEIVE_ERROR_MESSAGE)
+    def _on_error(self, _error):
 
+        _error = _error
 
-	def _on_error(self, _error):
+        for _error_handler in self._error_handlers:
 
-		_error = _error
+            _error_handler(_error)
 
-		for _error_handler in self._error_handlers:
+    def start(self, _on_message, _on_error, _selected_channel, *argv):
 
-			_error_handler(_error)
+        self._handlers.append(_on_message)
 
+        self._error_handlers.append(_on_error)
 
-	def start(self, _on_message, _on_error, _selected_channel, *argv):
+        with Session() as session:
 
-		self._handlers.append(_on_message)
+            using_jwt = self._config.access_jwt
 
-		self._error_handlers.append(_on_error)
+            session.headers["Authorization"] = (
+                self._config.auth_type + constants.ONE_WHITE_SPACE + using_jwt
+            )
 
-		with Session() as session:
+            connection = Connection(self._config.stream_url + api.SIGNALR, session)
 
-			using_jwt = self._config.access_jwt
+            chat = connection.register_hub(api.SIGNALR_HUB_MD)
 
-			session.headers['Authorization'] = self._config.auth_type \
-					+ constants.ONE_WHITE_SPACE + using_jwt
-			
-			connection = Connection(self._config.stream_url + api.SIGNALR, session)
-			
-			chat = connection.register_hub(api.SIGNALR_HUB_MD)
+            chat.client.on(api.SIGNALR_METHOD, self._on_message)
 
-			chat.client.on(api.SIGNALR_METHOD, self._on_message)
+            chat.client.on(api.SIGNALR_ERROR_METHOD, self._on_error)
 
-			chat.client.on(api.SIGNALR_ERROR_METHOD, self._on_error)
-			
-			connection.error += _on_error
-			
-			with connection:
+            connection.error += _on_error
 
-				chat.server.invoke('SwitchChannels', _selected_channel)
+            with connection:
 
-				while True:
+                chat.server.invoke("SwitchChannels", _selected_channel)
 
-					if connection.is_reset_connection:
+                while True:
 
-						print(constants.CONNECTION_LOST_ERROR_MESSAGE)
+                    if connection.is_reset_connection:
 
-						connection.reset_session(session)
-						connection.start()
+                        print(constants.CONNECTION_LOST_ERROR_MESSAGE)
 
-						chat.server.invoke('SwitchChannels', _selected_channel)
-						
-						time.sleep(6)
+                        connection.reset_session(session)
+                        connection.start()
 
-						connection.is_reset_connection = False
+                        chat.server.invoke("SwitchChannels", _selected_channel)
 
-					else:
+                        time.sleep(6)
 
-						time.sleep(9)
+                        connection.is_reset_connection = False
 
+                    else:
 
+                        time.sleep(9)
