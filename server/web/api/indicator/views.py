@@ -117,9 +117,7 @@ async def calculate(
     # Get outputs
     try:
         output = ta.decompose()
-        data = [
-            await get_return_data(k, v, predefined_indicator) for k, v in output.items()
-        ]
+        data = [await get_return_data(k, v, predefined_indicator) for k, v in output.items()]
         response = {
             "same_chart": False,
             "data": data,
@@ -137,6 +135,8 @@ async def calculate(
                     "name": predefined_indicator.name,
                 },
             ],
+            "name": predefined_indicator.name,
+            "label": predefined_indicator.label,
         }
 
     print(response)

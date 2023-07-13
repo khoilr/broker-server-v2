@@ -26,3 +26,5 @@ class DataOutputDTOModel(BaseModel):
 class IndicatorOutputDTOModel(BaseModel):
     same_chart: bool
     data: list[DataOutputDTOModel]
+    name: str
+    label: str
