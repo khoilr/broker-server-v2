@@ -1,5 +1,5 @@
-from server.db.models.predefined_indicator_model import PredefinedIndicatorModel
-from server.db.models.predefined_param_model import PredefinedParamModel
+from server.db.models.predefined_indicator import PredefinedIndicatorModel
+from server.db.models.predefined_param import PredefinedParamModel
 
 
 class PredefinedParamDAO:

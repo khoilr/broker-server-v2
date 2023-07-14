@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class IndicatorInputDTOModel(BaseModel):
+class IndicatorInputDTO(BaseModel):
     symbol: str
     indicator: str
     from_date: Optional[str] = (datetime.now() - timedelta(days=30)).strftime(
@@ -17,14 +17,14 @@ class IndicatorInputDTOModel(BaseModel):
         orm_mode = False
 
 
-class DataOutputDTOModel(BaseModel):
+class DataOutputDTO(BaseModel):
     data: list[float]
     name: str
     label: str
 
 
-class IndicatorOutputDTOModel(BaseModel):
+class IndicatorOutputDTO(BaseModel):
     same_chart: bool
-    data: list[DataOutputDTOModel]
+    data: list[DataOutputDTO]
     name: str
     label: str

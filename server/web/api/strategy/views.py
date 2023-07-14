@@ -1,16 +1,26 @@
-# from typing import List
+from typing import List
 
-# from fastapi import APIRouter
-# from fastapi.param_functions import Depends
+from fastapi import APIRouter
+from fastapi.param_functions import Depends
 
-# from server.db.dao.strategy_dao import StrategyDAO
-# from server.db.models.strategy_model import StrategyModel
-# from server.web.api.strategy.schema import UserModelDTO, UserModelInputDTO
+from server.db.dao.strategy import StrategyDAO
+from server.db.models.strategy import StrategyModel
+from server.db.models.user import UserModel
+from server.web.api.strategy.schema import UserDTO, UserModelInputDTO
+from utils import auth
 
-# router = APIRouter()
+router = APIRouter()
 
 
-# @router.get("/", response_model=List[StrategyModelDTO])
+@router.post("/")
+async def create(
+    user: UserModel = Depends(auth.get_current_user),
+    strategy_dao: StrategyDAO = Depends(),
+):
+    return await strategy_dao.create(user=user)
+
+
+# @router.get("/", response_model=List[StrategyDTO])
 # async def get_user_models(
 #     limit: int = 10,
 #     offset: int = 0,
@@ -27,7 +37,7 @@
 #     return await user_dao.get_all_users(limit=limit, offset=offset)
 
 
-# @router.post("/", response_model=UserModelDTO)
+# @router.post("/", response_model=UserDTO)
 # async def create_user_model(
 #     new_user_object: UserModelInputDTO,
 #     user_dao: UserDAO = Depends(),

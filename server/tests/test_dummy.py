@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from httpx import AsyncClient
 from starlette import status
 
-from server.db.dao.dummy_dao import DummyDAO
+from server.db.dao.dummy import DummyDAO
 
 
 @pytest.mark.anyio

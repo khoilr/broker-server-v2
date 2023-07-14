@@ -2,15 +2,15 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 
-from server.db.dao.predefined_indicator_dao import PredefinedIndicatorDAO
-from server.web.api.predefined_indicator.schema import PredefinedIndicatorOutputModelDTO
+from server.db.dao.predefined_indicator import PredefinedIndicatorDAO
+from server.web.api.predefined_indicator.schema import PredefinedIndicatorOutputDTO
 
 router = APIRouter()
 
 
 @router.get(
     "/",
-    response_model=List[PredefinedIndicatorOutputModelDTO],
+    response_model=List[PredefinedIndicatorOutputDTO],
 )
 async def get_predefined_indicators(
     predefined_indicator_dao: PredefinedIndicatorDAO = Depends(),

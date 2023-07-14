@@ -1,28 +1,29 @@
 import json
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm
 
-from server.db.dao.user_dao import UserDAO
-from server.db.models.user_model import UserModel
+from server.db.dao.user import UserDAO
+from server.db.models.user import UserModel
 from server.utils import auth
-from server.web.api.user.schema import UserOutputModelDTO
+from server.web.api.user.schema import UserOutputDTO
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 router = APIRouter()
 
 
 @router.post("/sign-in")
 async def sign_in(input_data: OAuth2PasswordRequestForm = Depends()):
-    # Set header for response
-    headers = {
-        "Authorization": f"Bearer {input_data.username}",
-    }
+    # Generate token for user
+    user = await auth.authenticate(input_data.username, input_data.password)
+    token = auth.encode_token(data={"id": user.id})
 
-    # Response content
+    # Set header and content
+    headers = {
+        "Authorization": f"Bearer {token}",
+    }
     content = json.dumps(
         {
-            "access_token": input_data.username,
+            "access_token": token,
             "token_type": "bearer",
         },
     )
@@ -40,7 +41,7 @@ async def sign_in(input_data: OAuth2PasswordRequestForm = Depends()):
 
 @router.post(
     "/sign-up",
-    response_model=UserOutputModelDTO,
+    response_model=UserOutputDTO,
     status_code=status.HTTP_201_CREATED,
 )
 async def sign_up(
@@ -68,3 +69,8 @@ async def sign_up(
         username=username,
         password=hashed_password,
     )
+
+
+@router.get("/me", response_model=UserOutputDTO)
+async def me(user: UserModel = Depends(auth.get_current_user)) -> UserModel:
+    return user

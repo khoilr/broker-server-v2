@@ -3,11 +3,11 @@ import json
 
 from talipp import indicators
 
-from server.db.dao.predefined_indicator_dao import PredefinedIndicatorDAO
-from server.db.dao.predefined_param_dao import PredefinedParamDAO
-from server.db.dao.predefined_return_dao import PredefinedReturnDAO
-from server.db.dao.stock_dao import StockDAO
-from server.db.models.predefined_indicator_model import PredefinedIndicatorModel
+from server.db.dao.predefined_indicator import PredefinedIndicatorDAO
+from server.db.dao.predefined_param import PredefinedParamDAO
+from server.db.dao.predefined_return import PredefinedReturnDAO
+from server.db.dao.stock import StockDAO
+from server.db.models.predefined_indicator import PredefinedIndicatorModel
 from server.utils.ssi.DataClient import DataClient
 
 

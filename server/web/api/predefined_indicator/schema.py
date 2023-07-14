@@ -2,15 +2,15 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from server.web.api.predefined_param.schema import PredefinedParamOutputModelDTO
-from server.web.api.predefined_return.schema import PredefinedReturnOutputModelDTO
+from server.web.api.predefined_param.schema import PredefinedParamOutputDTO
+from server.web.api.predefined_return.schema import PredefinedReturnOutputDTO
 
 
-class PredefinedIndicatorOutputModelDTO(BaseModel):
+class PredefinedIndicatorOutputDTO(BaseModel):
     id: int
     created_at: datetime
     updated_at: datetime
     name: str
     label: str
-    predefined_params: list[PredefinedParamOutputModelDTO]
-    predefined_returns: list[PredefinedReturnOutputModelDTO]
+    predefined_params: list[PredefinedParamOutputDTO]
+    predefined_returns: list[PredefinedReturnOutputDTO]

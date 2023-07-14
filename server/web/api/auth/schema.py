@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class AuthModelDTO(BaseModel):
+class AuthDTO(BaseModel):
     access_token: str
     token_type: str
 

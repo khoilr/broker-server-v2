@@ -2,14 +2,14 @@ from functools import partial
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 
-from server.db.dao.predefined_indicator_dao import PredefinedIndicatorDAO
-from server.db.dao.predefined_return_dao import PredefinedReturnDAO
-from server.db.models.predefined_param_model import PredefinedParamModel
+from server.db.dao.predefined_indicator import PredefinedIndicatorDAO
+from server.db.dao.predefined_return import PredefinedReturnDAO
+from server.db.models.predefined_param import PredefinedParamModel
 from server.utils.ssi.DataClient import DataClient
 from server.utils.TechnicalAnalysis import TechnicalAnalysis
 from server.web.api.indicator.schema import (
-    IndicatorInputDTOModel,
-    IndicatorOutputDTOModel,
+    IndicatorInputDTO,
+    IndicatorOutputDTO,
 )
 
 router = APIRouter()
@@ -17,7 +17,7 @@ router = APIRouter()
 
 def extract_params(
     query_params: dict,
-    indicator_dto: IndicatorInputDTOModel,
+    indicator_dto: IndicatorInputDTO,
     predefined_params: list[PredefinedParamModel],
 ) -> dict:
     params = {}
@@ -52,7 +52,7 @@ def extract_params(
     return params
 
 
-def get_price(indicator_dto: IndicatorInputDTOModel) -> str:
+def get_price(indicator_dto: IndicatorInputDTO) -> str:
     data_client = DataClient()
     daily_ohlc = data_client.daily_ohlc(
         symbol=indicator_dto.symbol,
@@ -80,11 +80,11 @@ async def get_return_data(k: str, v: list, predefined_indicator):
 
 @router.get(
     "/",
-    response_model=IndicatorOutputDTOModel,
+    response_model=IndicatorOutputDTO,
 )
 async def calculate(
     request: Request,
-    indicator_dto: IndicatorInputDTOModel = Depends(),
+    indicator_dto: IndicatorInputDTO = Depends(),
 ) -> dict:
     # Get predefined indicator
     predefined_indicator_dao = PredefinedIndicatorDAO()
@@ -117,9 +117,7 @@ async def calculate(
     # Get outputs
     try:
         output = ta.decompose()
-        data = [
-            await get_return_data(k, v, predefined_indicator) for k, v in output.items()
-        ]
+        data = [await get_return_data(k, v, predefined_indicator) for k, v in output.items()]
         response = {
             "same_chart": False,
             "data": data,

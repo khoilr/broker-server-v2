@@ -1,51 +1,39 @@
 from datetime import datetime, timedelta
-from typing import Annotated
+from typing import Any
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
-from passlib.context import CryptContext
-
-from server.db.dao.user_dao import UserDAO
-from server.db.models.user_model import UserModel
+from server.utils.auth.password import verify_password
+from server.db.dao.user import UserDAO
+from server.db.models.user import UserModel
 
 SECRET_KEY = "8fdd23c03a106a4767f889e52d64f86671c0ffdd911f82ff1d0a6f686838ce77"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 10
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/sign-in")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 
-async def get_user(username: str):
-    return await UserDAO.get(None, username)
+async def authenticate(username: str, password: str) -> UserModel:
+    user_dao = UserDAO()
+    user = await user_dao.get(username=username)
+
+    return user if verify_password(password, user.password) else None
 
 
-async def get_current_active_user(
-    current_user: Annotated[UserModel, Depends(get_user)],
-):
-    return UserDAO.get(None, current_user.username)
-
-
-def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
-
-
-def verify_password(plain_password, hashed_password) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-async def authenticate(username: str, password: str) -> bool:
-    user = await UserDAO.get(None, username)
-    return False if user is None else verify_password(password, user.password)
+async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserModel:
+    user_dao = UserDAO()
+    user = decode_token(token)
+    return await user_dao.get(id=user["id"])
 
 
 async def is_user_exist(username: str) -> bool:
-    user = await get_user(username)
+    user_dao = UserDAO()
+    user = await user_dao.get(username=username)
     return user is not None
 
 
-def create_access_token(data: dict):
+def encode_token(data: dict) -> str:
     # Create a copy of data to avoid changing the original data
     to_encode = data.copy()
 
@@ -60,9 +48,9 @@ def create_access_token(data: dict):
     return encoded_jwt
 
 
-def decode_access_token(token: str):
+def decode_token(token: str) -> dict[str, Any]:
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token=token, key=SECRET_KEY, algorithms=[ALGORITHM])
         return payload
     except JWTError:
         raise HTTPException(

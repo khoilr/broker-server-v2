@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
-class StockOutputModelDTO(BaseModel):
+class StockOutputDTO(BaseModel):
     id: int
     market: str
     name: str

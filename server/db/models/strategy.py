@@ -9,7 +9,7 @@ class StrategyModel(models.Model):
 
     # Relationships
     user = fields.ForeignKeyField("models.UserModel", related_name="strategies")
-    stock = fields.ForeignKeyField("models.StockModel", related_name="strategies")
+    stocks = fields.ManyToManyField("models.StockModel", related_name="strategies")
     indicators = fields.ReverseRelation["models.IndicatorModel"]
 
     class Meta:

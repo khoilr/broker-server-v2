@@ -1,6 +1,6 @@
 from typing import List
 
-from server.db.models.stock_model import StockModel
+from server.db.models.stock import StockModel
 
 
 class StockDAO:

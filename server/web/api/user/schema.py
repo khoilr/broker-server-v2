@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class UserOutputModelDTO(BaseModel):
+class UserOutputDTO(BaseModel):
     id: int
     name: str
     username: str

@@ -1,6 +1,6 @@
 from typing import List, Optional, Union
 
-from server.db.models.user_model import UserModel
+from server.db.models.user import UserModel
 
 
 class UserDAO:

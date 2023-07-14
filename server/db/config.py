@@ -3,18 +3,18 @@ from typing import List
 from server.settings import settings
 
 MODELS_MODULES: List[str] = [
-    "server.db.models.dummy_model",
-    "server.db.models.user_model",
-    "server.db.models.telegram_model",
-    "server.db.models.whatsapp_model",
-    "server.db.models.strategy_model",
-    "server.db.models.stock_model",
-    "server.db.models.predefined_indicator_model",
-    "server.db.models.predefined_param_model",
-    "server.db.models.predefined_return_model",
-    "server.db.models.indicator_model",
-    "server.db.models.param_model",
-    "server.db.models.condition_model",
+    "server.db.models.dummy",
+    "server.db.models.user",
+    "server.db.models.telegram",
+    "server.db.models.whatsapp",
+    "server.db.models.strategy",
+    "server.db.models.stock",
+    "server.db.models.predefined_indicator",
+    "server.db.models.predefined_param",
+    "server.db.models.predefined_return",
+    "server.db.models.indicator",
+    "server.db.models.param",
+    "server.db.models.condition",
 ]  # noqa: WPS407
 
 TORTOISE_CONFIG = {  # noqa: WPS407

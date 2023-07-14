@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class PriceInputModelDTO(BaseModel):
+class PriceInputDTO(BaseModel):
     symbol: str
     time_frame: Optional[str]
     from_date: Optional[str] = (datetime.now() - timedelta(days=30)).strftime(

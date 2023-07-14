@@ -3,14 +3,14 @@ from typing import List
 from fastapi import APIRouter
 from fastapi.param_functions import Depends
 
-from server.db.dao.dummy_dao import DummyDAO
-from server.db.models.dummy_model import DummyModel
-from server.web.api.dummy.schema import DummyModelDTO, DummyModelInputDTO
+from server.db.dao.dummy import DummyDAO
+from server.db.models.dummy import DummyModel
+from server.web.api.dummy.schema import DummyDTO, DummyModelInputDTO
 
 router = APIRouter()
 
 
-@router.get("/", response_model=List[DummyModelDTO])
+@router.get("/", response_model=List[DummyDTO])
 async def get_dummy_models(
     limit: int = 10,
     offset: int = 0,

@@ -1,5 +1,5 @@
-from server.db.models.predefined_indicator_model import PredefinedIndicatorModel
-from server.db.models.predefined_return_model import PredefinedReturnModel
+from server.db.models.predefined_indicator import PredefinedIndicatorModel
+from server.db.models.predefined_return import PredefinedReturnModel
 
 
 class PredefinedReturnDAO:
