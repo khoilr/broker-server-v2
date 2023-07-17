@@ -9,6 +9,7 @@ from server.web.api import (
     price,
     redis,
     stock,
+    predict
 )
 
 api_router = APIRouter()
@@ -47,4 +48,9 @@ api_router.include_router(
     price.router,
     prefix="/price",
     tags=["price"],
+)
+api_router.include_router(
+    predict.router,
+    prefix="/predict",
+    tags=["predict"],
 )

@@ -1,4 +1,6 @@
+
 from server.utils.ssi import SSI, constants
+from datetime import timedelta, datetime
 
 
 class DataClient(SSI):
@@ -79,21 +81,47 @@ class DataClient(SSI):
             ascending (bool, optional): sort by ascending. Defaults to True.
 
         Returns:
-            _type_: _description_
+            type_: description_
         """
-        params = {
-            "symbol": symbol,
-            "fromDate": from_date,
-            "toDate": to_date,
-            "pageIndex": page_index,
-            "pageSize": page_size,
-            "ascending": ascending,
-        }
-        return self.this_request(
-            constants.MD_DAILY_OHLC,
-            method="get",
-            params=params,
-        )
+        # Convert the date strings to datetime objects
+        from_date = datetime.strptime(from_date, "%d/%m/%Y")
+        to_date = datetime.strptime(to_date, "%d/%m/%Y")
+
+        # Calculate the number of days between from_date and to_date
+        total_days = (to_date - from_date).days
+
+        # Generate the 30-day periods
+        periods = []
+        current_date = from_date
+
+        while current_date < to_date:
+            period_end = current_date + timedelta(days=30)
+            if period_end > to_date:
+                period_end = to_date
+
+            periods.append((current_date, period_end))
+            current_date = period_end + timedelta(days=1)
+
+        # Print the generated periods
+        data = {}
+        data['data'] = []
+        for period in periods:
+            params = {
+                "symbol": symbol,
+                "fromDate": period[0].strftime('%d/%m/%Y'),
+                "toDate": period[1].strftime('%d/%m/%Y'),
+                "pageIndex": page_index,
+                "pageSize": page_size,
+                "ascending": ascending,
+            }
+            request =  self.this_request(
+                constants.MD_DAILY_OHLC,
+                method="get",
+                params=params,
+            )
+            for i in request['data']:
+                data['data'].append(i)
+        return data
 
     def intraday_ohlc(
         self,
@@ -146,9 +174,11 @@ class DataClient(SSI):
 if __name__ == "__main__":
     market_data_client = DataClient()
     print(
-        market_data_client.stocks(
-            market="HOSE",
+        market_data_client.daily_ohlc(
+            symbol="VN30",
+            from_date='14/04/2023',
+            to_date='05/07/2023',
             page_index=1,
-            page_size=10,
-        ),
+            page_size=100,
+        )
     )
