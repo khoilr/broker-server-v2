@@ -1,12 +1,13 @@
 from datetime import datetime, timedelta
-from typing import Any
+from typing import Any, Union
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
-from server.utils.auth.password import verify_password
+
 from server.db.dao.user import UserDAO
 from server.db.models.user import UserModel
+from server.utils.auth.password import verify_password
 
 SECRET_KEY = "8fdd23c03a106a4767f889e52d64f86671c0ffdd911f82ff1d0a6f686838ce77"
 ALGORITHM = "HS256"
@@ -14,14 +15,18 @@ ALGORITHM = "HS256"
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 
-async def authenticate(username: str, password: str) -> UserModel:
+async def authenticate(username: str, password: str) -> Union[UserModel, None]:
     user_dao = UserDAO()
     user = await user_dao.get(username=username)
+    if user is not None:
+        return user if verify_password(password, user.password) else None
+    else:
+        return None
 
-    return user if verify_password(password, user.password) else None
 
-
-async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserModel:
+async def get_current_user(
+    token: str = Depends(oauth2_scheme),
+) -> Union[UserModel, None]:
     user_dao = UserDAO()
     user = decode_token(token)
     return await user_dao.get(id=user["id"])
@@ -33,7 +38,7 @@ async def is_user_exist(username: str) -> bool:
     return user is not None
 
 
-def encode_token(data: dict) -> str:
+def encode_token(data: dict[str, Any]) -> str:
     # Create a copy of data to avoid changing the original data
     to_encode = data.copy()
 

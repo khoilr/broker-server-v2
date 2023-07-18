@@ -56,6 +56,8 @@ class UserDAO:
         query = UserModel.all()
         if id:
             query = query.filter(id=id).first()
-        if username:
+        elif username:
             query = query.filter(username=username).first()
+        else:
+            return None
         return await query

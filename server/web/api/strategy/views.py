@@ -1,52 +1,52 @@
-from typing import List
+from typing import Union
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
 from fastapi.param_functions import Depends
+from tortoise.exceptions import OperationalError
 
+from server.db.dao.stock import StockDAO
 from server.db.dao.strategy import StrategyDAO
 from server.db.models.strategy import StrategyModel
 from server.db.models.user import UserModel
-from server.web.api.strategy.schema import UserDTO, UserModelInputDTO
-from utils import auth
+from server.utils import auth
+from server.web.api.strategy.schema import StrategyInputDTO, StrategyUnrelatedOutputDTO
+from server.web.api.strategy.utils import create_strategy
 
 router = APIRouter()
 
 
-@router.post("/")
+@router.post(
+    "/",
+    status_code=201,
+    response_model=StrategyUnrelatedOutputDTO,
+)
 async def create(
     user: UserModel = Depends(auth.get_current_user),
     strategy_dao: StrategyDAO = Depends(),
-):
-    return await strategy_dao.create(user=user)
+    strategy_dto: StrategyInputDTO = Depends(),
+    stock_dao: StockDAO = Depends(),
+) -> Union[StrategyModel, Response]:
+    try:
+        strategy = await create_strategy(
+            user=user,
+            strategy_dao=strategy_dao,
+            strategy_dto=strategy_dto,
+            stock_dao=stock_dao,
+        )
+        return strategy
+    except OperationalError as e:
+        print(e)
+        return Response(status_code=422)
 
 
-# @router.get("/", response_model=List[StrategyDTO])
-# async def get_user_models(
-#     limit: int = 10,
-#     offset: int = 0,
-#     user_dao: UserDAO = Depends(),
-# ) -> List[UserModel]:
-#     """
-#     Retrieve all user objects from the database.
-
-#     :param limit: limit of user objects, defaults to 10.
-#     :param offset: offset of user objects, defaults to 0.
-#     :param user_dao: DAO for user models.
-#     :return: list of user objects from database.
-#     """
-#     return await user_dao.get_all_users(limit=limit, offset=offset)
-
-
-# @router.post("/", response_model=UserDTO)
-# async def create_user_model(
-#     new_user_object: UserModelInputDTO,
-#     user_dao: UserDAO = Depends(),
-# ) -> UserModel:
-#     """
-#     Creates user model in the database.
-
-#     :param new_user_object: new user model item.
-#     :param user_dao: DAO for user models.
-#     """
-#     print(new_user_object.dict())
-#     return await user_dao.create_user_model(**new_user_object.dict())
+@router.get(
+    "/",
+    response_model=list[StrategyUnrelatedOutputDTO],
+)
+async def get_all(
+    user: UserModel = Depends(auth.get_current_user),
+    strategy_dao: StrategyDAO = Depends(),
+) -> list[StrategyModel]:
+    print(user)
+    strategies = await strategy_dao.filter(user=user)
+    return strategies

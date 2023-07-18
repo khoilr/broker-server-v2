@@ -10,7 +10,7 @@ class ConditionModel(models.Model):
     # Attributes
     source = fields.CharField(max_length=50)
     change = fields.CharField(max_length=50)
-    value = fields.CharField(max_length=50)
+    value = fields.FloatField()
     unit = fields.CharField(max_length=50)
 
     # Relationships

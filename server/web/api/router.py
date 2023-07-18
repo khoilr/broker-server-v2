@@ -9,9 +9,11 @@ from server.web.api import (
     price,
     redis,
     stock,
+    strategy,
 )
 
 api_router = APIRouter()
+
 api_router.include_router(monitoring.router)
 api_router.include_router(
     dummy.router,
@@ -34,11 +36,6 @@ api_router.include_router(
     tags=["indicator"],
 )
 api_router.include_router(
-    stock.router,
-    prefix="/stock",
-    tags=["stock"],
-)
-api_router.include_router(
     predefined_indicator.router,
     prefix="/predefined_indicator",
     tags=["predefined_indicator"],
@@ -47,4 +44,14 @@ api_router.include_router(
     price.router,
     prefix="/price",
     tags=["price"],
+)
+api_router.include_router(
+    stock.router,
+    prefix="/stock",
+    tags=["stock"],
+)
+api_router.include_router(
+    strategy.router,
+    prefix="/strategy",
+    tags=["strategy"],
 )

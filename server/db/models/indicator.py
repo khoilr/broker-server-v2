@@ -8,13 +8,16 @@ class IndicatorModel(models.Model):
     updated_at = fields.DatetimeField(auto_now=True)
 
     # Relationships
-    strategy = fields.ForeignKeyField("models.StrategyModel", related_name="indicators")
+    strategy = fields.ForeignKeyField(
+        "models.StrategyModel",
+        related_name="indicators",
+    )
     predefined_indicator = fields.ForeignKeyField(
         "models.PredefinedIndicatorModel",
         related_name="indicators",
     )
-    params = fields.ReverseRelation["models.ParamModel"]
-    condition = fields.ReverseRelation["models.ConditionModel"]
+    params = fields.ReverseRelation["models.ParamModel"]  # type: ignore
+    condition = fields.ReverseRelation["models.ConditionModel"]  # type: ignore
 
     class Meta:
         table = "indicators"

@@ -6,15 +6,26 @@ from fastapi.security import OAuth2PasswordRequestForm
 from server.db.dao.user import UserDAO
 from server.db.models.user import UserModel
 from server.utils import auth
+from server.utils.auth import password as auth_password
 from server.web.api.user.schema import UserOutputDTO
 
 router = APIRouter()
 
 
 @router.post("/sign-in")
-async def sign_in(input_data: OAuth2PasswordRequestForm = Depends()):
+async def sign_in(input_data: OAuth2PasswordRequestForm = Depends()) -> Response:
     # Generate token for user
     user = await auth.authenticate(input_data.username, input_data.password)
+
+    # Raise error when user is None
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Generate token
     token = auth.encode_token(data={"id": user.id})
 
     # Set header and content
@@ -61,7 +72,7 @@ async def sign_up(
         )
 
     # Hash password
-    hashed_password = auth.hash_password(password)
+    hashed_password = auth_password.hash_password(password)
 
     # Create user
     return await user_dao.create(

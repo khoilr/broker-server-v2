@@ -39,10 +39,9 @@ class StockDAO:
 
     async def filter(
         self,
-        market: str = None,
-        symbol: str = None,
+        **kwargs,
     ) -> List[StockModel]:
-        return await StockModel.filter(market=market, symbol=symbol).all()
+        return await StockModel.filter(**kwargs)
 
     async def update(
         self,

@@ -23,8 +23,8 @@ async def get_predefined_indicators(
             "id": predefined_indicator.id,
             "created_at": predefined_indicator.created_at,
             "updated_at": predefined_indicator.updated_at,
-            "predefined_params": await predefined_indicator.predefined_params,
-            "predefined_returns": await predefined_indicator.predefined_returns,
+            "predefined_params": await predefined_indicator.predefined_params,  # type: ignore
+            "predefined_returns": await predefined_indicator.predefined_returns,  # type: ignore
         }
         for predefined_indicator in predefined_indicators
     ]

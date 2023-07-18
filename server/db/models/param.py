@@ -1,14 +1,3 @@
-# class Parameter(db.Entity):
-#     # Table name
-#     _table_ = "parameters"
-
-#     # Attributes
-#     value = Required(str, max_len=50)
-
-#     # Relationships
-#     indicator = Required("Indicator")
-#     parameter_ta = Required("ParameterTA")
-
 from tortoise import fields, models
 
 
