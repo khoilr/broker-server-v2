@@ -10,7 +10,7 @@ from server.db.models.strategy import StrategyModel
 from server.db.models.user import UserModel
 from server.utils import auth
 from server.web.api.strategy.schema import StrategyInputDTO, StrategyUnrelatedOutputDTO
-from server.web.api.strategy.utils import create_strategy
+from server.web.api.strategy.util import create_strategy
 
 router = APIRouter()
 
