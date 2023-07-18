@@ -27,8 +27,12 @@ async def insert_predefined_indicators():
             continue
 
         if indicator_name not in ["FibRetracement", "Indicator"]:
-            (predefined_indicator, created) = await predefined_indicator_dao.get_or_create(
-                name=indicator_name, label=inspect.getdoc(getattr(indicators, indicator_name)).split("\n")[0]  # type: ignore
+            (
+                predefined_indicator,
+                created,
+            ) = await predefined_indicator_dao.get_or_create(
+                name=indicator_name,
+                label=inspect.getdoc(getattr(indicators, indicator_name)).split("\n")[0],  # type: ignore
             )
             # if created:
             #     print(f"Created indicator {indicator_name}")
@@ -60,7 +64,10 @@ async def insert_predefined_params(
                 name=parameter_name,
                 label=" ".join(parameter_name.split("_")).title(),
                 predefined_indicator=predefined_indicator,
-                _type=str(parameters[parameter_name]).split(":")[1].split("=")[0].strip(),
+                _type=str(parameters[parameter_name])
+                .split(":")[1]
+                .split("=")[0]
+                .strip(),
             )
             # if created:
             #     print(f"Created parameter {parameter_name} for indicator {indicator_name}")

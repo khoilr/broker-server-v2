@@ -46,7 +46,9 @@ async def create_strategy(
     return strategy
 
 
-async def create_indicator(strategy: StrategyModel, indicators: list[IndicatorInsertionInputDTO]) -> None:
+async def create_indicator(
+    strategy: StrategyModel, indicators: list[IndicatorInsertionInputDTO]
+) -> None:
     # Create indicators
     for indicator in indicators:
         predefined_indicator = await predefined_indicator_dao.get(name=indicator.name)

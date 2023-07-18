@@ -6,7 +6,10 @@ from server.db.models.predefined_param import PredefinedParamModel
 
 class ParamDAO:
     async def create(
-        self, value: str, indicator: IndicatorModel, predefined_param: PredefinedParamModel
+        self,
+        value: str,
+        indicator: IndicatorModel,
+        predefined_param: PredefinedParamModel,
     ) -> ParameterModel:
         return await ParameterModel.create(
             value=value,

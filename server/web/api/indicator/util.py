@@ -81,6 +81,6 @@ if __name__ == "__main__":
             symbol="VCB",
             from_date="01/01/2021",
             to_date="30/01/2021",
-        )
+        ),
     )
     print(prices)
