@@ -63,7 +63,9 @@ def get_price(indicator_dto: IndicatorCalculationInputDTO) -> list[dict]:
         return []
 
 
-async def get_return_data(k: str, v: list[Any], predefined_indicator: PredefinedIndicatorModel, data_len: int):
+async def get_return_data(
+    k: str, v: list[Any], predefined_indicator: PredefinedIndicatorModel, data_len: int
+):
     predefined_return_dao = PredefinedReturnDAO()
     predefined_return = await predefined_return_dao.get(
         name=k,

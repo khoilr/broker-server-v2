@@ -49,7 +49,10 @@ async def calculate(
     # Get outputs
     try:
         output = ta.decompose()
-        data = [await get_return_data(k, v, predefined_indicator, data_len) for k, v in output.items()]
+        data = [
+            await get_return_data(k, v, predefined_indicator, data_len)
+            for k, v in output.items()
+        ]
         response = {
             "same_chart": False,
             "data": data,

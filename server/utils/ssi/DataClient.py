@@ -89,7 +89,9 @@ class DataClient(SSI):
         response = None
         while from_date_datetime < to_date_datetime:
             # Get min to_date_datetime
-            current_to_date_datetime = min(from_date_datetime + timedelta(days=30), to_date_datetime)
+            current_to_date_datetime = min(
+                from_date_datetime + timedelta(days=30), to_date_datetime
+            )
 
             # Call API
             params = {
@@ -150,7 +152,9 @@ class DataClient(SSI):
         response = None
         while from_date_datetime < to_date_datetime:
             # Get min to_date_datetime
-            current_to_date_datetime = min(from_date_datetime + timedelta(days=30), to_date_datetime)
+            current_to_date_datetime = min(
+                from_date_datetime + timedelta(days=30), to_date_datetime
+            )
 
             # Call API
             params = {

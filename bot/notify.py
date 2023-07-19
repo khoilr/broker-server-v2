@@ -108,7 +108,10 @@ def on_message(message):
                             notified_strategy_dict = json.loads(notified_strategy)
 
                             # If strategy is not notified
-                            if notified_strategy_dict["id"] == strategy.id and notified_strategy_dict["active"]:
+                            if (
+                                notified_strategy_dict["id"] == strategy.id
+                                and notified_strategy_dict["active"]
+                            ):
                                 # Modify notified to True
                                 notified_strategy_dict["active"] = False
 
@@ -128,13 +131,18 @@ def on_message(message):
                         notified_strategy_dict = json.loads(notified_strategy)
 
                         # If strategy is not notified
-                        if notified_strategy_dict["id"] == strategy.id and not notified_strategy_dict["active"]:
+                        if (
+                            notified_strategy_dict["id"] == strategy.id
+                            and not notified_strategy_dict["active"]
+                        ):
                             # Modify notified to True
                             notified_strategy_dict["active"] = False
 
                             # Modify the list in redis
                             redis_db.lset(
-                                symbol, notified_strategies.index(notified_strategy), json.dumps(notified_strategy_dict)
+                                symbol,
+                                notified_strategies.index(notified_strategy),
+                                json.dumps(notified_strategy_dict),
                             )
 
                             # Run notify asynchronously
@@ -142,7 +150,7 @@ def on_message(message):
                                 notify(
                                     strategy=strategy,
                                     notification_string=notification_string,
-                                )
+                                ),
                             )
 
                             break
@@ -174,8 +182,8 @@ def get_params(indicator: Indicator, content: dict) -> dict:
                     content["Low"],  # low
                     content["Close"],  # close
                     content["Volume"],  # volume
-                ]
-            ]
+                ],
+            ],
         )
         params["input_values"] = ohlcv
     else:
@@ -209,7 +217,11 @@ def get_output_ta(indicator, params, source):
 
 def is_meet_condition(output, condition) -> bool:
     if len(output) > 0:
-        return True if eval(f"{output[-1]} {condition.change} {condition.value}") else False
+        return (
+            True
+            if eval(f"{output[-1]} {condition.change} {condition.value}")
+            else False
+        )
     else:
         return False
 
