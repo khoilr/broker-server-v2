@@ -43,14 +43,13 @@ async def calculate(
 
     # Add price data
     data = get_price(indicator_dto=indicator_dto)
+    data_len = len(data)
     ta.add_inputs(prices=data, input_values=input_values)
 
     # Get outputs
     try:
         output = ta.decompose()
-        data = [
-            await get_return_data(k, v, predefined_indicator) for k, v in output.items()
-        ]
+        data = [await get_return_data(k, v, predefined_indicator, data_len) for k, v in output.items()]
         response = {
             "same_chart": False,
             "data": data,
@@ -59,6 +58,7 @@ async def calculate(
         }
     except:
         output = ta.compose()
+        output = [0] * (data_len - len(output)) + output
         response = {
             "same_chart": True,
             "data": [

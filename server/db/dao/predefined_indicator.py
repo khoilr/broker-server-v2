@@ -12,7 +12,7 @@ class PredefinedIndicatorDAO:
     async def get(self, name: str) -> PredefinedIndicatorModel:
         return await PredefinedIndicatorModel.get(name=name)
 
-    async def get_or_create(self, name: str, label: str) -> PredefinedIndicatorModel:
+    async def get_or_create(self, name: str, label: str) -> tuple[PredefinedIndicatorModel, bool]:
         return await PredefinedIndicatorModel.get_or_create(
             name=name,
             label=label,

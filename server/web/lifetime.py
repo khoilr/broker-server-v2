@@ -22,6 +22,7 @@ from prometheus_fastapi_instrumentator.instrumentation import (
 
 from server.services.redis.lifetime import init_redis, shutdown_redis
 from server.settings import settings
+from server.utils.start_up import insert_data
 
 
 def setup_opentelemetry(app: FastAPI) -> None:  # pragma: no cover

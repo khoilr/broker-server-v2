@@ -8,7 +8,7 @@ class TelegramModel(models.Model):
     updated_at = fields.DatetimeField(auto_now=True)
 
     # Telegram Fields
-    username = fields.CharField(max_length=200)
+    username = fields.CharField(max_length=200, unique=True)
     first_name = fields.CharField(max_length=200, null=True)
     last_name = fields.CharField(max_length=200, null=True)
     is_bot = fields.BooleanField(null=True)

@@ -1,6 +1,6 @@
 import json
 import time
-from typing import Callable
+from typing import Callable, Union
 
 import signalr
 from requests import Session
@@ -13,7 +13,7 @@ class MarketDataStream(SSI):
         self,
         on_message: Callable,
         on_error: Callable,
-        config_file_path: str = None,
+        config_file_path: Union[str, None] = None,
     ):
         super().__init__(config_file_path)
 

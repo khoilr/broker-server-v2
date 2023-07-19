@@ -4,6 +4,7 @@ from typing import Any
 from fastapi import HTTPException
 
 from server.db.dao.predefined_return import PredefinedReturnDAO
+from server.db.models.predefined_indicator import PredefinedIndicatorModel
 from server.db.models.predefined_param import PredefinedParamModel
 from server.utils.ssi.DataClient import DataClient
 from server.web.api.indicator.schema import IndicatorCalculationInputDTO
@@ -54,19 +55,21 @@ def get_price(indicator_dto: IndicatorCalculationInputDTO) -> list[dict]:
         symbol=indicator_dto.symbol,
         from_date=indicator_dto.from_date,  # type: ignore
         to_date=indicator_dto.to_date,  # type: ignore
-        page_index=1,
-        page_size=100,
     )
-    data = daily_ohlc["data"]
-    return data
+    if daily_ohlc is not None:
+        data = daily_ohlc["data"]
+        return data
+    else:
+        return []
 
 
-async def get_return_data(k: str, v: list[Any], predefined_indicator):
+async def get_return_data(k: str, v: list[Any], predefined_indicator: PredefinedIndicatorModel, data_len: int):
     predefined_return_dao = PredefinedReturnDAO()
     predefined_return = await predefined_return_dao.get(
         name=k,
         predefined_indicator=predefined_indicator,
     )
+    v = [0] * (data_len - len(v)) + v
     return {
         "data": v,
         "name": predefined_return.name,

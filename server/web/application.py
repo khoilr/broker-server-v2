@@ -49,7 +49,7 @@ def get_app() -> FastAPI:
     )
 
     # Add CORS middleware
-    regex_origin = "^http:\/\/103\.157\.218\.126.*"
+    regex_origin = r"^http://103\.157\.218\.126.*"
     origins = ["http://localhost:3000"]
     app.add_middleware(
         CORSMiddleware,

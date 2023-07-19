@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from typing import Union
 
 import requests
 
@@ -7,7 +8,7 @@ from server.utils.ssi import config, constants
 
 
 class SSI(object):
-    def __init__(self, config_file_path: str = None) -> None:
+    def __init__(self, config_file_path: Union[str, None] = None) -> None:
         if config_file_path is None:
             self.config_file_path = "server/utils/ssi/config.py"
 
@@ -86,7 +87,7 @@ class SSI(object):
             headers=headers,
         )
 
-    def refresh_token(self, config_file_path: str = None):
+    def refresh_token(self, config_file_path: Union[str, None] = None):
         """
         Get new JWT token, reassigned to config and write to file
 
