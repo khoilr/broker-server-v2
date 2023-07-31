@@ -1,5 +1,14 @@
 import inspect
 import json
+import sys
+import os
+
+# Get the current working directory
+current_directory = os.getcwd()
+
+# Add the current directory to sys.path
+sys.path.append(current_directory)
+
 
 from talipp import indicators
 
@@ -22,6 +31,32 @@ async def insert_predefined_indicators():
     predefined_param_dao = PredefinedParamDAO()
     predefined_return_dao = PredefinedReturnDAO()
 
+    price_volume_label = ["PRICE", "VOLUME"]
+    predefined_price_volume = [
+    {
+        "name": "PRICE",
+        "returns": [
+            {
+                "label": "Price",
+                "name": "price"
+            }
+        ]
+    },
+    {
+        "name": "VOLUME",
+        "returns": [
+            {
+                "label": "Volume",
+                "name": "volume"
+            }
+        ]
+    }]
+    for indicator_name in price_volume_label:
+            (predefined_indicator,created,) = await predefined_indicator_dao.get_or_create(
+                name=indicator_name,
+                label= predefined_price_volume[int(price_volume_label.index(indicator_name))]['returns'][0]['label'],
+            )
+
     for indicator_name in dir(indicators):
         if indicator_name.startswith("_") or indicator_name == "PivotsHL":
             continue
@@ -38,11 +73,10 @@ async def insert_predefined_indicators():
             #     print(f"Created indicator {indicator_name}")
             # else:
             #     print(f"Found indicator {indicator_name}")
-
             await insert_predefined_params(
                 predefined_indicator=predefined_indicator,
                 indicator_name=indicator_name,
-                predefined_param_dao=predefined_param_dao,
+                predefined_param_dao=predefined_param_dao
             )
             await insert_predefined_returns(
                 predefined_indicator=predefined_indicator,
@@ -51,12 +85,20 @@ async def insert_predefined_indicators():
                 data=data,
             )
 
-
 async def insert_predefined_params(
     predefined_indicator: PredefinedIndicatorModel,
     indicator_name: str,
     predefined_param_dao: PredefinedParamDAO,
+    price: bool = False
 ):
+    if price == True:
+        for parameter_name in parameters:
+            _, created = await predefined_param_dao.get_or_create(
+                name=parameter_name,
+                label=" ".join(parameter_name.split("_")).title(),
+                predefined_indicator=predefined_indicator
+            )
+        return
     parameters = inspect.signature(getattr(indicators, indicator_name)).parameters
     for parameter_name in parameters:
         if parameter_name not in ["input_indicator", "value_extractor"]:
@@ -155,3 +197,16 @@ async def insert_stock():
 async def insert_data():
     await insert_predefined_indicators()
     await insert_stock()
+if __name__ == "__main__":
+    # with open(
+    #     "server/static/data/predefined_indicators.json",
+    #     "r",
+    # ) as f:
+    #     data = json.load(f)
+    #     indicator_json = next(
+    #         (item for item in data if item["name"] == "Aroon"),
+    #         None,
+    #     )
+    # print(indicator_json)
+    for i in inspect.signature(getattr(indicators, "TTM")).parameters:
+        print(i)

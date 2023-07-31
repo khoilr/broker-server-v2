@@ -7,13 +7,7 @@ This project was generated using fastapi_template.
 To start a database you can use docker.
 
 ```bash
-docker run -d \
-  --name postgres \
-  -p 5432:5432 \
-  -e POSTGRES_USER=root \
-  -e POSTGRES_PASSWORD=khoikhoi \
-  -e POSTGRES_DB=broker \
-  postgres
+docker run -d   --name postgres   -p 5432:5432   -e POSTGRES_USER=root  -e POSTGRES_PASSWORD=khoikhoi   -e POSTGRES_DB=broker   postgres
 ```
 
 ## Document
