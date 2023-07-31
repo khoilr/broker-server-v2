@@ -82,7 +82,10 @@ async def insert_predefined_params(
                 name=parameter_name,
                 label=" ".join(parameter_name.split("_")).title(),
                 predefined_indicator=predefined_indicator,
-                _type=str(parameters[parameter_name]).split(":")[1].split("=")[0].strip(),
+                _type=str(parameters[parameter_name])
+                .split(":")[1]
+                .split("=")[0]
+                .strip(),
             )
             # if created:
             #     print(f"Created parameter {parameter_name} for indicator {indicator_name}")
