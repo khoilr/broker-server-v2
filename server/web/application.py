@@ -41,7 +41,7 @@ def get_app() -> FastAPI:
         )
     app = FastAPI(
         title="server",
-        version="1",
+        version="0",
         docs_url="/api/docs",
         redoc_url="/api/redoc",
         openapi_url="/api/openapi.json",
