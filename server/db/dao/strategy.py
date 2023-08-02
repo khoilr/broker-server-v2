@@ -11,3 +11,6 @@ class StrategyDAO:
 
     async def filter(self, user: UserModel) -> list[StrategyModel]:
         return await StrategyModel.filter(user=user)
+
+    async def select_strategy_from_stock(self, stock: StockModel) -> StrategyModel:
+        return await StrategyModel.get(stocks=stock)

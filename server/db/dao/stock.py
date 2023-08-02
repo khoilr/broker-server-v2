@@ -23,6 +23,9 @@ class StockDAO:
     async def get(self, market: str, symbol: str) -> StockModel:
         return await StockModel.get(market=market, symbol=symbol)
 
+    async def get_by_name(self,symbol: str) -> StockModel:
+        return await StockModel.get(symbol=symbol)
+
     async def get_or_create(
         self,
         market: str,
