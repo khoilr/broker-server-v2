@@ -24,7 +24,7 @@ from talipp import indicators
 
 taS = []
 
-telegram_bot = None
+telegram_bot = Bot(token=os.getenv("TELEGRAM_BOT_TOKEN"))
 
 # Get the current working directory
 current_directory = os.getcwd()
