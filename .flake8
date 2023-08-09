@@ -111,3 +111,4 @@ exclude =
   ./var,
   ./.vscode,
   *migrations*,
+  ./packages
