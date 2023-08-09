@@ -1,7 +1,7 @@
 import inspect
 import json
-import sys
 import os
+import sys
 
 # Get the current working directory
 current_directory = os.getcwd()
@@ -32,8 +32,8 @@ async def insert_predefined_indicators():
     predefined_return_dao = PredefinedReturnDAO()
 
     predefined_price_volume = [
-        {"name": "price", "label": "Price"},
-        {"name": "volume", "label": "Volume"},
+        {"name": "Price", "label": "Price"},
+        {"name": "Volume", "label": "Volume"},
     ]
     for indicator_name in predefined_price_volume:
         (predefined_indicator, created) = await predefined_indicator_dao.get_or_create(

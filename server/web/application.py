@@ -1,5 +1,4 @@
 import logging
-from importlib import metadata
 
 import sentry_sdk
 from fastapi import FastAPI

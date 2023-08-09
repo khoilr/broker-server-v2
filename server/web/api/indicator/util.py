@@ -2,14 +2,13 @@ from functools import partial
 from typing import Any
 
 from fastapi import HTTPException
+from starlette.datastructures import QueryParams
 
 from server.db.dao.predefined_return import PredefinedReturnDAO
 from server.db.models.predefined_indicator import PredefinedIndicatorModel
 from server.db.models.predefined_param import PredefinedParamModel
 from server.utils.ssi.DataClient import DataClient
 from server.web.api.indicator.schema import IndicatorCalculationInputDTO
-
-from starlette.datastructures import QueryParams
 
 
 def extract_params(
@@ -64,7 +63,10 @@ def get_price(indicator_dto: IndicatorCalculationInputDTO) -> list[dict]:
 
 
 async def get_return_data(
-    k: str, v: list[Any], predefined_indicator: PredefinedIndicatorModel, data_len: int
+    k: str,
+    v: list[Any],
+    predefined_indicator: PredefinedIndicatorModel,
+    data_len: int,
 ):
     predefined_return_dao = PredefinedReturnDAO()
     predefined_return = await predefined_return_dao.get(

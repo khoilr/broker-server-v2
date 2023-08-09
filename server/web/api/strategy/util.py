@@ -47,7 +47,8 @@ async def create_strategy(
 
 
 async def create_indicator(
-    strategy: StrategyModel, indicators: list[IndicatorInsertionInputDTO]
+    strategy: StrategyModel,
+    indicators: list[IndicatorInsertionInputDTO],
 ) -> None:
     # Create indicators
     for indicator in indicators:

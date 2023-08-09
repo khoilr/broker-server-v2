@@ -1,5 +1,7 @@
 from typing import Union
+
 from pydantic import BaseModel
+
 from server.db.models.telegram import TelegramModel
 
 

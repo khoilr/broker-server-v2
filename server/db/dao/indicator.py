@@ -1,6 +1,6 @@
 from server.db.models.indicator import IndicatorModel
-from server.db.models.strategy import StrategyModel
 from server.db.models.predefined_indicator import PredefinedIndicatorModel
+from server.db.models.strategy import StrategyModel
 
 
 class IndicatorDAO:

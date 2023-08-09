@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from pprint import pprint
 from typing import Union
+
 from server.utils.ssi import SSI, constants
 
 
@@ -90,7 +91,8 @@ class DataClient(SSI):
         while from_date_datetime < to_date_datetime:
             # Get min to_date_datetime
             current_to_date_datetime = min(
-                from_date_datetime + timedelta(days=30), to_date_datetime
+                from_date_datetime + timedelta(days=30),
+                to_date_datetime,
             )
 
             # Call API
@@ -153,7 +155,8 @@ class DataClient(SSI):
         while from_date_datetime < to_date_datetime:
             # Get min to_date_datetime
             current_to_date_datetime = min(
-                from_date_datetime + timedelta(days=30), to_date_datetime
+                from_date_datetime + timedelta(days=30),
+                to_date_datetime,
             )
 
             # Call API
