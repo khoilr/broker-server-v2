@@ -6,6 +6,7 @@ from server.web.api import (
     indicator,
     monitoring,
     predefined_indicator,
+    predict,
     price,
     redis,
     stock,
@@ -54,4 +55,9 @@ api_router.include_router(
     strategy.router,
     prefix="/strategy",
     tags=["strategy"],
+)
+api_router.include_router(
+    predict.router,
+    prefix="/predict",
+    tags=["predict"],
 )

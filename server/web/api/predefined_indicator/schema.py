@@ -7,6 +7,8 @@ from server.web.api.predefined_return.schema import PredefinedReturnOutputDTO
 
 
 class PredefinedIndicatorOutputDTO(BaseModel):
+    """Output DTO for Predifined Indicator model."""
+
     id: int
     created_at: datetime
     updated_at: datetime

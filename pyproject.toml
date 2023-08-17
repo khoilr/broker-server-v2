@@ -44,6 +44,10 @@ python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 aiogram = "^2.25.1"
 loguru = "^0.7.0"
+darglint = "^1.8.1"
+pandas = "^2.0.3"
+joblib = "^1.3.2"
+scikit-learn = "^1.3.0"
 
 
 [tool.poetry.dev-dependencies]

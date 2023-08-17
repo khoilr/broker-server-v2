@@ -19,6 +19,16 @@ async def calculate(
     request: Request,
     indicator_dto: IndicatorCalculationInputDTO = Depends(),
 ) -> dict:
+    """
+    Calculate technical analysis from request object.
+
+    Args:
+        request (Request): request object
+        indicator_dto (IndicatorCalculationInputDTO): Indicator Calculation Input DTO object. Defaults to Depends().
+
+    Returns:
+        dict: calculated data
+    """
     # Get predefined indicator
     predefined_indicator_dao = PredefinedIndicatorDAO()
     predefined_indicator = await predefined_indicator_dao.get(name=indicator_dto.name)
@@ -32,7 +42,7 @@ async def calculate(
     )
 
     # Input type
-    """Input type should be either OHLCV, Open, High, Low, Close, or Volume"""
+    # Input type should be either OHLCV, Open, High, Low, Close, or Volume
     input_values = params.pop("input_values")
 
     # Init indicator
@@ -50,8 +60,8 @@ async def calculate(
     try:
         output = ta.decompose()
         data = [
-            await get_return_data(k, v, predefined_indicator, data_len)
-            for k, v in output.items()
+            await get_return_data(key, value, predefined_indicator, data_len)
+            for key, value in output.items()
         ]
         response = {
             "same_chart": False,
@@ -59,7 +69,7 @@ async def calculate(
             "label": predefined_indicator.label,
             "name": predefined_indicator.name,
         }
-    except:
+    except Exception:
         output = ta.compose()
         output = [0] * (data_len - len(output)) + output
         response = {
@@ -74,8 +84,6 @@ async def calculate(
             "name": predefined_indicator.name,
             "label": predefined_indicator.label,
         }
-
-    print(response)
 
     # Return response
     return response

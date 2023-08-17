@@ -34,12 +34,25 @@ def set_multiproc_dir() -> None:
 
 
 class Server(uvicorn.Server):
-    """Customized uvicorn.Server
+    """
+    Customized uvicorn.Server.
 
     Uvicorn server overrides signals and we need to include
-    Rocketry to the signals."""
+
+    Rocketry to the signals.
+    """
 
     def handle_exit(self, sig: int, frame) -> None:
+        """
+        Handle the exit method.
+
+        Args:
+            sig (int): sig
+            frame (_type_): frame
+
+        Returns:
+            None: None
+        """
         app_rocketry.session.shut_down()
         return super().handle_exit(sig, frame)
 
@@ -57,24 +70,6 @@ async def main() -> None:
         log_level=settings.log_level.value.lower(),
         factory=True,
     )
-
-    # server = Server(
-    #     config=uvicorn.Config(
-    #         "server.web.application:get_app",
-    #         workers=settings.workers_count,
-    #         host=settings.host,
-    #         port=settings.port,
-    #         reload=settings.reload,
-    #         log_level=settings.log_level.value.lower(),
-    #         factory=True,
-    #         loop="asyncio",
-    #     )
-    # )
-
-    # api = asyncio.create_task(server.serve())
-    # sched = asyncio.create_task(app_rocketry.serve())
-
-    # await asyncio.wait([sched, api])
 
 
 if __name__ == "__main__":

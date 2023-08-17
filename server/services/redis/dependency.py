@@ -20,7 +20,11 @@ async def get_redis_pool(
 
     I use pools, so you don't acquire connection till the end of the handler.
 
-    :param request: current request.
-    :returns:  redis connection pool.
+
+    Args:
+        request (Request): current request.
+
+    Returns:
+        AsyncGenerator[Redis, None]: redis connection pool.
     """
     return request.app.state.redis_pool

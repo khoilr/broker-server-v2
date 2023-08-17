@@ -1,4 +1,4 @@
-from typing import Any, AsyncGenerator
+from typing import AsyncGenerator
 
 import nest_asyncio
 import pytest
@@ -23,7 +23,8 @@ def anyio_backend() -> str:
     """
     Backend for anyio pytest plugin.
 
-    :return: backend name.
+    Returns:
+        str: backend name
     """
     return "asyncio"
 
@@ -31,9 +32,10 @@ def anyio_backend() -> str:
 @pytest.fixture(autouse=True)
 async def initialize_db() -> AsyncGenerator[None, None]:
     """
-    Initialize models and database.
+    Initialize database.
 
-    :yields: Nothing.
+    Yields:
+        None: None
     """
     initializer(
         MODELS_MODULES,
@@ -53,7 +55,8 @@ async def fake_redis_pool() -> AsyncGenerator[ConnectionPool, None]:
     """
     Get instance of a fake redis.
 
-    :yield: FakeRedis instance.
+    Yields:
+        Iterator[AsyncGenerator[ConnectionPool, None]]: AsyncGenerator iterator
     """
     server = FakeServer()
     server.connected = True
@@ -71,7 +74,8 @@ def fastapi_app(
     """
     Fixture for creating FastAPI app.
 
-    :return: fastapi app with mocked dependencies.
+    Returns:
+        FastAPI: fastapi app with mocked dependencies.
     """
     application = get_app()
     application.dependency_overrides[get_redis_pool] = lambda: fake_redis_pool
@@ -81,13 +85,15 @@ def fastapi_app(
 @pytest.fixture
 async def client(
     fastapi_app: FastAPI,
-    anyio_backend: Any,
 ) -> AsyncGenerator[AsyncClient, None]:
     """
     Fixture that creates client for requesting server.
 
-    :param fastapi_app: the application.
-    :yield: client for the app.
+    Args:
+        fastapi_app (FastAPI): FastAPI application
+
+    Yields:
+        Iterator[AsyncGenerator[AsyncClient, None]]: Asynchronous Client
     """
     async with AsyncClient(app=fastapi_app, base_url="http://test") as ac:
         yield ac

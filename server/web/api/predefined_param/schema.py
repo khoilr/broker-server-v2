@@ -4,6 +4,8 @@ from pydantic import BaseModel
 
 
 class PredefinedParamOutputDTO(BaseModel):
+    """Output DTO for Predifined Parameters model."""
+
     id: int
     created_at: datetime
     updated_at: datetime

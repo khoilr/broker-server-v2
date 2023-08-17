@@ -10,10 +10,14 @@ class UserDAO:
         """
         Add single user to session.
 
-        :param name: name of a user.
-        """
-        print(name, username, password)
+        Args:
+            name (str): Name of a user
+            username (str): username
+            password (str): user password
 
+        Returns:
+            UserModel: User object
+        """
         return await UserModel.create(
             name=name,
             username=username,
@@ -24,9 +28,12 @@ class UserDAO:
         """
         Get all user models with limit/offset pagination.
 
-        :param limit: limit of dummies.
-        :param offset: offset of dummies.
-        :return: stream of dummies.
+        Args:
+            limit (int): limit of dummies.
+            offset (int): offset of dummies.
+
+        Returns:
+            List[UserModel]: stream of dummies.
         """
         return await UserModel.all().offset(offset).limit(limit)
 
@@ -34,8 +41,11 @@ class UserDAO:
         """
         Get specific user model.
 
-        :param name: name of user instance.
-        :return: user models.
+        Args:
+            name (Optional[str], optional): name of user instance.. Defaults to None.
+
+        Returns:
+            List[UserModel]: user models.
         """
         query = UserModel.all()
         if name:
@@ -50,8 +60,12 @@ class UserDAO:
         """
         Get specific user model.
 
-        :param name: name of user instance.
-        :return: user models.
+        Args:
+            id (Optional[int], optional): User id. Defaults to None.
+            username (Optional[str], optional): Username. Defaults to None.
+
+        Returns:
+            Union[UserModel, None]: User object, return None if none exists
         """
         query = UserModel.all()
         if id:

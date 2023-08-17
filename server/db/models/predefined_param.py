@@ -2,6 +2,8 @@ from tortoise import fields, models
 
 
 class PredefinedParamModel(models.Model):
+    """Data model for predefined parameters."""
+
     # Fields
     id = fields.IntField(pk=True)
     name = fields.CharField(max_length=255)

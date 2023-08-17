@@ -16,9 +16,12 @@ async def get_redis_value(
     """
     Get value from redis.
 
-    :param key: redis key, to get data from.
-    :param redis_pool: redis connection pool.
-    :returns: information from redis.
+    Args:
+        key (str): redis key, to get data from.
+        redis_pool (ConnectionPool): v. Defaults to Depends(get_redis_pool).
+
+    Returns:
+        RedisValueDTO: information from redis.
     """
     async with Redis(connection_pool=redis_pool) as redis:
         redis_value = await redis.get(key)
@@ -36,8 +39,9 @@ async def set_redis_value(
     """
     Set value in redis.
 
-    :param redis_value: new value data.
-    :param redis_pool: redis connection pool.
+    Args:
+        redis_value (RedisValueDTO): new value data.
+        redis_pool (ConnectionPool): redis connection pool.. Defaults to Depends(get_redis_pool).
     """
     if redis_value.value is not None:
         async with Redis(connection_pool=redis_pool) as redis:

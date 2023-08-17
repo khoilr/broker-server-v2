@@ -22,14 +22,14 @@ from prometheus_fastapi_instrumentator.instrumentation import (
 
 from server.services.redis.lifetime import init_redis, shutdown_redis
 from server.settings import settings
-from server.utils.start_up import insert_data
 
 
 def setup_opentelemetry(app: FastAPI) -> None:  # pragma: no cover
     """
     Enables opentelemetry instrumentation.
 
-    :param app: current application.
+    Args:
+        app (FastAPI): current application
     """
     if not settings.opentelemetry_endpoint:
         return
@@ -86,7 +86,8 @@ def stop_opentelemetry(app: FastAPI) -> None:  # pragma: no cover
     """
     Disables opentelemetry instrumentation.
 
-    :param app: current application.
+    Args:
+        app (FastAPI): current application.
     """
     if not settings.opentelemetry_endpoint:
         return
@@ -100,7 +101,8 @@ def setup_prometheus(app: FastAPI) -> None:  # pragma: no cover
     """
     Enables prometheus integration.
 
-    :param app: current application.
+    Args:
+        app (FastAPI): current application.
     """
     PrometheusFastApiInstrumentator(should_group_status_codes=False).instrument(
         app,
@@ -116,8 +118,11 @@ def register_startup_event(
     This function uses fastAPI app to store data
     in the state, such as db_engine.
 
-    :param app: the fastAPI application.
-    :return: function that actually performs actions.
+    Args:
+        app (FastAPI): the fastAPI application.
+
+    Returns:
+        Callable[[], Awaitable[None]]: function that actually performs actions.
     """
 
     @app.on_event("startup")
@@ -127,7 +132,7 @@ def register_startup_event(
         # setup_prometheus(app)
 
         # Insert predefined data
-        await insert_data()
+        # await insert_data()
 
         pass  # noqa: WPS420
 
@@ -140,8 +145,11 @@ def register_shutdown_event(
     """
     Actions to run on application's shutdown.
 
-    :param app: fastAPI application.
-    :return: function that actually performs actions.
+    Args:
+        app (FastAPI): fastAPI application.
+
+    Returns:
+        Callable[[], Awaitable[None]]: function that actually performs actions.
     """
 
     @app.on_event("shutdown")

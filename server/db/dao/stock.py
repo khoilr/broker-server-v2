@@ -13,6 +13,18 @@ class StockDAO:
         name: str,
         en_name: str,
     ) -> StockModel:
+        """
+        Create Stock object using DAO.
+
+        Args:
+            market (str): Market symbol
+            symbol (str): Symbol name
+            name (str): Full name of stock symbol
+            en_name (str): English name
+
+        Returns:
+            StockModel: Stock object
+        """
         return await StockModel.create(
             market=market,
             symbol=symbol,
@@ -20,7 +32,29 @@ class StockDAO:
             en_name=en_name,
         )
 
+    async def get_by_name(self, symbol: str) -> StockModel:
+        """
+        Get Stock DAO by name.
+
+        Args:
+            symbol (str): stock symbol
+
+        Returns:
+            StockModel: stock object
+        """
+        return await StockModel.get(symbol=symbol)
+
     async def get(self, market: str, symbol: str) -> StockModel:
+        """
+        Get Stock object.
+
+        Args:
+            market (str): Market symbol
+            symbol (str): Symbol name
+
+        Returns:
+            StockModel: Stock object
+        """
         return await StockModel.get(market=market, symbol=symbol)
 
     async def get_or_create(
@@ -30,6 +64,18 @@ class StockDAO:
         name: str,
         en_name: str,
     ) -> StockModel:
+        """
+        Get the stock object, or create it if none exists.
+
+        Args:
+            market (str): Market symbol
+            symbol (str): Symbol name
+            name (str): Full name of stock symbol
+            en_name (str): English name
+
+        Returns:
+            StockModel: Stock object
+        """
         return await StockModel.get_or_create(
             market=market,
             symbol=symbol,
@@ -41,6 +87,13 @@ class StockDAO:
         self,
         **kwargs,
     ) -> List[StockModel]:
+        """
+        Filter the stock symbol.
+
+        Returns:
+            **kwargs: filter criteria
+            List[StockModel]: list of stock objects
+        """
         return await StockModel.filter(**kwargs)
 
     async def update(
@@ -50,6 +103,18 @@ class StockDAO:
         name: str,
         en_name: str,
     ) -> StockModel:
+        """
+        Update stock object.
+
+        Args:
+            market (str): Market symbol
+            symbol (str): Symbol name
+            name (str): Full name of the stock
+            en_name (str): English name
+
+        Returns:
+            StockModel: Stock object
+        """
         model = await StockModel.get(market=market, symbol=symbol)
         model.name = name
         model.en_name = en_name
@@ -57,7 +122,20 @@ class StockDAO:
         return model
 
     async def delete(self, market: str, symbol: str) -> None:
+        """
+        Delete stock object.
+
+        Args:
+            market (str): Market symbol
+            symbol (str): Symbol name
+        """
         await StockModel.filter(market=market, symbol=symbol).delete()
 
     async def get_all(self) -> List[StockModel]:
+        """
+        Get all the stock objects.
+
+        Returns:
+            List[StockModel]: List of stock objects
+        """
         return await StockModel.all()

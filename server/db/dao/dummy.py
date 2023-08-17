@@ -8,28 +8,38 @@ class DummyDAO:
 
     async def create_dummy_model(self, name: str) -> DummyModel:
         """
-        Add single dummy to session.
+        Create dummy object.
 
-        :param name: name of a dummy.
+        Args:
+            name (str): dummy object name
+
+        Returns:
+            DummyModel: Dummy object
         """
         return await DummyModel.create(name=name)
 
     async def get_all_dummies(self, limit: int, offset: int) -> List[DummyModel]:
         """
-        Get all dummy models with limit/offset pagination.
+        Get all dummy objects.
 
-        :param limit: limit of dummies.
-        :param offset: offset of dummies.
-        :return: stream of dummies.
+        Args:
+            limit (int): number
+            offset (int): query offset
+
+        Returns:
+            List[DummyModel]: list of dummy objects
         """
         return await DummyModel.all().offset(offset).limit(limit)
 
     async def filter(self, name: Optional[str] = None) -> List[DummyModel]:
         """
-        Get specific dummy model.
+        Get specific dummy object.
 
-        :param name: name of dummy instance.
-        :return: dummy models.
+        Args:
+            name (Optional[str], optional): name of dummy instance. Defaults to None.
+
+        Returns:
+            List[DummyModel]: dummy objects.
         """
         query = DummyModel.all()
         if name:

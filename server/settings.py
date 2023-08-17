@@ -74,7 +74,8 @@ class Settings(BaseSettings):
         """
         Assemble database URL from settings.
 
-        :return: database URL.
+        Returns:
+            URL: database URL.
         """
         return URL.build(
             scheme="postgres",
@@ -90,7 +91,8 @@ class Settings(BaseSettings):
         """
         Assemble REDIS URL from settings.
 
-        :return: redis URL.
+        Returns:
+            URL: redis URL.
         """
         path = ""
         if self.redis_base is not None:

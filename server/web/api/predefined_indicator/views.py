@@ -14,7 +14,16 @@ router = APIRouter()
 )
 async def get_predefined_indicators(
     predefined_indicator_dao: PredefinedIndicatorDAO = Depends(),
-):
+) -> list:
+    """
+    Get predefined indicator objects.
+
+    Args:
+        predefined_indicator_dao (PredefinedIndicatorDAO): Predifined indicator dao object. Defaults to Depends().
+
+    Returns:
+        list: json array
+    """
     predefined_indicators = await predefined_indicator_dao.get_all()
     data = [
         {

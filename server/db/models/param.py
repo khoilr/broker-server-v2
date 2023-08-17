@@ -2,6 +2,8 @@ from tortoise import fields, models
 
 
 class ParameterModel(models.Model):
+    """Data model for Parameter."""
+
     # Fields
     id = fields.IntField(pk=True)
     created_at = fields.DatetimeField(auto_now_add=True)

@@ -2,6 +2,8 @@ from tortoise import fields, models
 
 
 class WhatsappModel(models.Model):
+    """Data model for Whatsapp account."""
+
     # Fields
     id = fields.IntField(pk=True)
     created_at = fields.DatetimeField(auto_now_add=True)

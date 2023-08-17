@@ -14,6 +14,18 @@ router = APIRouter()
 
 @router.post("/sign-in")
 async def sign_in(input_data: OAuth2PasswordRequestForm = Depends()) -> Response:
+    """
+    User sign in.
+
+    Args:
+        input_data (OAuth2PasswordRequestForm): Input data. Defaults to Depends().
+
+    Raises:
+        HTTPException: HTTP error code
+
+    Returns:
+        Response: Response for user
+    """
     # Generate token for user
     user = await auth.authenticate(input_data.username, input_data.password)
 
@@ -59,6 +71,19 @@ async def sign_up(
     form_data: OAuth2PasswordRequestForm = Depends(),
     user_dao: UserDAO = Depends(),
 ) -> UserModel:
+    """
+    User sign up.
+
+    Args:
+        form_data (OAuth2PasswordRequestForm): form data. Defaults to Depends().
+        user_dao (UserDAO): user dao object. Defaults to Depends().
+
+    Raises:
+        HTTPException: HTTP error code
+
+    Returns:
+        UserModel: User object
+    """
     # Destructuring
     username = form_data.username
     password = form_data.password
@@ -84,4 +109,13 @@ async def sign_up(
 
 @router.get("/me", response_model=UserOutputDTO)
 async def me(user: UserModel = Depends(auth.get_current_user)) -> UserModel:
+    """
+    Find user.
+
+    Args:
+        user (UserModel): User object. Defaults to Depends(auth.get_current_user).
+
+    Returns:
+        UserModel: User object
+    """
     return user

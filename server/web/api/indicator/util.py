@@ -16,6 +16,20 @@ def extract_params(
     indicator_dto: IndicatorCalculationInputDTO,
     predefined_params: list[PredefinedParamModel],
 ) -> dict:
+    """
+    Extract query parameters.
+
+    Args:
+        query_params (QueryParams): Query parameters
+        indicator_dto (IndicatorCalculationInputDTO): Indicator Calculation Input DTO object
+        predefined_params (list[PredefinedParamModel]): List of predifined parameter object
+
+    Raises:
+        HTTPException: HTTP error code
+
+    Returns:
+        dict: parameters
+    """
     params = {}
     for k, v in query_params.items():
         if k in indicator_dto.dict():
@@ -49,6 +63,15 @@ def extract_params(
 
 
 def get_price(indicator_dto: IndicatorCalculationInputDTO) -> list[dict]:
+    """
+    Get price.
+
+    Args:
+        indicator_dto (IndicatorCalculationInputDTO): Indicator Calculation Input DTIO object
+
+    Returns:
+        list[dict]: json array or empty array
+    """
     data_client = DataClient()
     daily_ohlc = data_client.daily_ohlc(
         symbol=indicator_dto.symbol,
@@ -58,8 +81,7 @@ def get_price(indicator_dto: IndicatorCalculationInputDTO) -> list[dict]:
     if daily_ohlc is not None:
         data = daily_ohlc["data"]
         return data
-    else:
-        return []
+    return []
 
 
 async def get_return_data(
@@ -67,15 +89,27 @@ async def get_return_data(
     v: list[Any],
     predefined_indicator: PredefinedIndicatorModel,
     data_len: int,
-):
+) -> dict:
+    """
+    Get return data.
+
+    Args:
+        k (str): Key
+        v (list[Any]): Value
+        predefined_indicator (PredefinedIndicatorModel): Predifined indicator object
+        data_len (int): data length
+
+    Returns:
+        dict: data
+    """
     predefined_return_dao = PredefinedReturnDAO()
     predefined_return = await predefined_return_dao.get(
         name=k,
         predefined_indicator=predefined_indicator,
     )
-    v = [0] * (data_len - len(v)) + v
+    value = [0] * (data_len - len(v)) + v
     return {
-        "data": v,
+        "data": value,
         "name": predefined_return.name,
         "label": predefined_return.label,
     }
@@ -90,4 +124,3 @@ if __name__ == "__main__":
             to_date="30/01/2021",
         ),
     )
-    print(prices)

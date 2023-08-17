@@ -7,7 +7,16 @@ router = APIRouter()
 
 
 @router.get("/daily")
-async def get_daily_price(price_model_dto: PriceInputDTO = Depends()):
+async def get_daily_price(price_model_dto: PriceInputDTO = Depends()) -> list:
+    """
+    Function for getting daily price of stock symbol.
+
+    Args:
+        price_model_dto (PriceInputDTO): price dto object. Defaults to Depends().
+
+    Returns:
+        list: json array
+    """
     data_client = DataClient()
     return data_client.daily_ohlc(
         symbol=price_model_dto.symbol,

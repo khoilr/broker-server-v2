@@ -9,4 +9,13 @@ router = APIRouter()
 
 @router.get("/", response_model=list[StockOutputDTO])
 async def get_stocks(stock_dao: StockDAO = Depends()) -> list[StockModel]:
+    """
+    Get stock objects.
+
+    Args:
+        stock_dao (StockDAO): stock dao object. Defaults to Depends().
+
+    Returns:
+        list[StockModel]: list of stock objects
+    """
     return await stock_dao.get_all()

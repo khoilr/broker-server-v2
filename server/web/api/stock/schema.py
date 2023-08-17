@@ -4,6 +4,8 @@ from pydantic import BaseModel
 
 
 class StockOutputDTO(BaseModel):
+    """Output DTO for stock model."""
+
     id: int
     market: str
     name: str

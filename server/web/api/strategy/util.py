@@ -7,6 +7,7 @@ from server.db.dao.predefined_indicator import PredefinedIndicatorDAO
 from server.db.dao.predefined_param import PredefinedParamDAO
 from server.db.dao.stock import StockDAO
 from server.db.dao.strategy import StrategyDAO
+from server.db.dao.telegram import TelegramDAO
 from server.db.models.strategy import StrategyModel
 from server.db.models.user import UserModel
 from server.web.api.indicator.schema import IndicatorInsertionInputDTO
@@ -27,12 +28,32 @@ async def create_strategy(
     strategy_dto: StrategyInputDTO,
     stock_dao: StockDAO,
 ) -> StrategyModel:
+    """
+    Create strategy object.
+
+    Args:
+        user (UserModel): user object
+        strategy_dao (StrategyDAO): strategy dao object
+        strategy_dto (StrategyInputDTO): strategy dto object
+        stock_dao (StockDAO): stock dao obejct
+
+    Returns:
+        StrategyModel: strategy object
+    """
     # Destructing
     symbols = strategy_dto.symbols
+    telegram = strategy_dto.telegram
     indicators = strategy_dto.indicators
 
     # Get stocks
     stocks = await stock_dao.filter(symbol__in=symbols)
+
+    # Todo: Create a telegram row in database with a username (telegram)
+    telegram_dao = TelegramDAO()
+    telegram_object = telegram_dao.update_or_create(username=telegram)
+
+    # Todo: Link the telegram to current user (user)
+    user.update_or_create(telegram=telegram_object)
 
     # Create strategy
     strategy = await strategy_dao.create(
@@ -50,6 +71,13 @@ async def create_indicator(
     strategy: StrategyModel,
     indicators: list[IndicatorInsertionInputDTO],
 ) -> None:
+    """
+    Create indicator object.
+
+    Args:
+        strategy (StrategyModel): strategy object
+        indicators (list[IndicatorInsertionInputDTO]): list of indicators input DTO
+    """
     # Create indicators
     for indicator in indicators:
         predefined_indicator = await predefined_indicator_dao.get(name=indicator.name)

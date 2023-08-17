@@ -19,10 +19,13 @@ async def get_user_models(
     """
     Retrieve all user objects from the database.
 
-    :param limit: limit of user objects, defaults to 10.
-    :param offset: offset of user objects, defaults to 0.
-    :param user_dao: DAO for user models.
-    :return: list of user objects from database.
+    Args:
+        limit (int): limit of user objects. Defaults to 10.
+        offset (int): offset of user objects. Defaults to 0.
+        user_dao (UserDAO): DAO for user models. Defaults to Depends().
+
+    Returns:
+        List[UserModel]: list of user objects from database.
     """
     return await user_dao.get_all(limit=limit, offset=offset)
 
@@ -35,8 +38,11 @@ async def create_user_model(
     """
     Creates user model in the database.
 
-    :param new_user_object: new user model item.
-    :param user_dao: DAO for user models.
+    Args:
+        new_user_object (UserModelInputDTO): new user model item
+        user_dao (UserDAO): DAO for user models. Defaults to Depends().
+
+    Returns:
+        UserModel: user object
     """
-    print(new_user_object.dict())
     return await user_dao.create(**new_user_object.dict())

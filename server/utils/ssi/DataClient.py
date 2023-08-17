@@ -1,11 +1,17 @@
 from datetime import datetime, timedelta
-from pprint import pprint
 from typing import Union
 
 from server.utils.ssi import SSI, constants
 
 
 class DataClient(SSI):
+    """
+    Data client class.
+
+    Args:
+        SSI (SSI): SSI
+    """
+
     def __init__(self, config_file_path: Union[str, None] = None):
         super().__init__(config_file_path)
         self.headers = {
@@ -21,6 +27,18 @@ class DataClient(SSI):
         body=None,
         params=None,
     ):
+        """
+        Request to URL.
+
+        Args:
+            url (str): URL
+            method (str): Request method
+            body (_type_, optional): Additional body. Defaults to None.
+            params (_type_, optional): Additional parameters. Defaults to None.
+
+        Returns:
+            No idea: No idea
+        """
         return super().request(
             url=url,
             method=method,
@@ -31,7 +49,7 @@ class DataClient(SSI):
 
     def stocks(self, market: str, page_index: int, page_size: int):
         """
-        Get stocks data from SSI
+        Get stocks data from SSI.
 
         Args:
             market (str): HOSE, HNX, UPCOM
@@ -53,22 +71,15 @@ class DataClient(SSI):
             params=params,
         )
 
-    # def securities_details(self, _input_data, _object):
-    #     return self._get(const.MD_SECURITIES_DETAILS, body=_input_data, params=_object)
-
-    # def index_components(self, _input_data, _object):
-    #     return self._get(const.MD_INDEX_COMPONENTS, body=_input_data, params=_object)
-
-    # def index_list(self, _input_data, _object):
-    #     return self._get(const.MD_INDEX_LIST, body=_input_data, params=_object)
-
     def daily_ohlc(
         self,
         symbol: str,
         from_date: str,
         to_date: str,
+        page_index: int = 1,
+        page_size: int = 100,
         ascending: bool = True,
-    ) -> Union[dict, None]:
+    ):
         """
         Get daily OHLC data from SSI
 
@@ -76,52 +87,49 @@ class DataClient(SSI):
             symbol (str): symbol of stock
             from_date (str): from date in format dd/mm/yyyy
             to_date (str): to date in format dd/mm/yyyy
+            page_index (int): index of page
+            page_size (int): size of page
             ascending (bool, optional): sort by ascending. Defaults to True.
 
         Returns:
-            _type_: _description_
+            type_: description_
         """
+        # Convert the date strings to datetime objects
+        from_date = datetime.strptime(from_date, "%d/%m/%Y")
+        to_date = datetime.strptime(to_date, "%d/%m/%Y")
 
-        # convert from_date to_date to datetime object
-        from_date_datetime = datetime.strptime(from_date, "%d/%m/%Y")
-        to_date_datetime = datetime.strptime(to_date, "%d/%m/%Y")
+        # Generate the 30-day periods
+        periods = []
+        current_date = from_date
 
-        # break down from_date_datetime and to_date_datetime into smaller chunks in 30 days
-        response = None
-        while from_date_datetime < to_date_datetime:
-            # Get min to_date_datetime
-            current_to_date_datetime = min(
-                from_date_datetime + timedelta(days=30),
-                to_date_datetime,
-            )
+        while current_date < to_date:
+            period_end = current_date + timedelta(days=30)
+            if period_end > to_date:
+                period_end = to_date
 
-            # Call API
+            periods.append((current_date, period_end))
+            current_date = period_end + timedelta(days=1)
+
+        # Print the generated periods
+        data = {}
+        data["data"] = []
+        for period in periods:
             params = {
                 "symbol": symbol,
-                "fromDate": from_date_datetime.strftime("%d/%m/%Y"),
-                "toDate": current_to_date_datetime.strftime("%d/%m/%Y"),
-                "pageIndex": 1,
-                "pageSize": 100,
+                "fromDate": period[0].strftime("%d/%m/%Y"),
+                "toDate": period[1].strftime("%d/%m/%Y"),
+                "pageIndex": page_index,
+                "pageSize": page_size,
                 "ascending": ascending,
             }
-            current_response = self.this_request(
+            request = self.this_request(
                 constants.MD_DAILY_OHLC,
                 method="get",
                 params=params,
             )
-
-            # Merge response
-            if response is None:
-                response = current_response
-            else:
-                response["data"] += current_response["data"]
-                response["totalRecord"] += current_response["totalRecord"]
-
-            # Update from_date_datetime
-            from_date_datetime = current_to_date_datetime + timedelta(days=1)
-
-        # Return response
-        return response
+            for i in request["data"]:
+                data["data"].append(i)
+        return data
 
     def intraday_ohlc(
         self,
@@ -133,7 +141,7 @@ class DataClient(SSI):
         ascending: bool = True,
     ):
         """
-        Get intraday OHLC data from SSI
+        Get intraday OHLC data from SSI.
 
         Args:
             symbol (str): symbol of stock
@@ -186,26 +194,3 @@ class DataClient(SSI):
 
         # Return response
         return response
-
-    # def daily_index(self, _input_data, _object):
-    #     return self._get(const.MD_DAILY_INDEX, body=_input_data, params=_object)
-
-    # def daily_stock_price(self, _input_data, _object):
-    #     return self._get(const.MD_DAILY_STOCK_PRICE, body=_input_data, params=_object)
-
-    # def backtest(self, _input_data, _object):
-    #     return self._get(const.MD_BACKTEST, body=_input_data, params=_object)
-
-
-if __name__ == "__main__":
-    market_data_client = DataClient()
-    data = market_data_client.intraday_ohlc(
-        symbol="fpt",
-        from_date="01/01/2021",
-        to_date="31/3/2023",
-        page_index=1,
-        page_size=100,
-    )
-    if data is not None:
-        pprint(data)
-        print(data["totalRecord"])

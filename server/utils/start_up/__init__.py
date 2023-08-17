@@ -1,14 +1,8 @@
+"""This module inserts predifined indicators into database from json file."""
 import inspect
 import json
 import os
 import sys
-
-# Get the current working directory
-current_directory = os.getcwd()
-
-# Add the current directory to sys.path
-sys.path.append(current_directory)
-
 
 from talipp import indicators
 
@@ -19,13 +13,20 @@ from server.db.dao.stock import StockDAO
 from server.db.models.predefined_indicator import PredefinedIndicatorModel
 from server.utils.ssi.DataClient import DataClient
 
+# Get the current working directory
+current_directory = os.getcwd()
+
+# Add the current directory to sys.path
+sys.path.append(current_directory)
+
 
 async def insert_predefined_indicators():
+    """Insert predefined indicators from json file."""
     with open(
         "server/static/data/predefined_indicators.json",
         "r",
-    ) as f:
-        data = json.load(f)
+    ) as file:
+        data = json.load(file)
 
     predefined_indicator_dao = PredefinedIndicatorDAO()
     predefined_param_dao = PredefinedParamDAO()
@@ -75,6 +76,14 @@ async def insert_predefined_params(
     indicator_name: str,
     predefined_param_dao: PredefinedParamDAO,
 ):
+    """
+    Insert predefined paramters.
+
+    Args:
+        predefined_indicator (PredefinedIndicatorModel): Predefined Indicator object
+        indicator_name (str): Indicator name
+        predefined_param_dao (PredefinedParamDAO): Predefined Parameter dao object
+    """
     parameters = inspect.signature(getattr(indicators, indicator_name)).parameters
     for parameter_name in parameters:
         if parameter_name not in ["input_indicator", "value_extractor"]:
@@ -99,6 +108,15 @@ async def insert_predefined_returns(
     predefined_return_dao: PredefinedReturnDAO,
     data,
 ):
+    """
+    Insert predefined returns object.
+
+    Args:
+        predefined_indicator (PredefinedIndicatorModel): Predefined Indicator object
+        indicator_name (str): Indicator name
+        predefined_return_dao (PredefinedReturnDAO): Predefined Return dao object
+        data (_type_): data
+    """
     indicator_json = next(
         (item for item in data if item["name"] == indicator_name),
         None,
@@ -106,21 +124,18 @@ async def insert_predefined_returns(
     if indicator_json is not None:
         returns = indicator_json["returns"]
 
-        for _return in returns:
-            name = _return["name"]
-            label = _return["label"]
-            _, created = await predefined_return_dao.create_or_get(
+        for return_object in returns:
+            name = return_object["name"]
+            label = return_object["label"]
+            await predefined_return_dao.create_or_get(
                 name=name,
                 label=label,
                 predefined_indicator=predefined_indicator,
             )
-            # if created:
-            #     print(f"Created return {name} for indicator {indicator_name}")
-            # else:
-            #     print(f"Found return {name} for indicator {indicator_name}")
 
 
 async def insert_stock():
+    """Insert stock into database."""
     markets = ["HOSE", "HNX", "UPCOM"]
 
     data_client = DataClient()
@@ -160,9 +175,8 @@ async def insert_stock():
                     #     print(f"Created Stock instance for {symbol} in {market}")
                     # else:
                     #     print(f"Found Stock instance for {symbol} in {market}")
-                except Exception as e:
-                    print(e)
-                    print(stock)
+                except Exception:
+                    continue
 
             if stock_count >= total_records:
                 break
@@ -171,5 +185,6 @@ async def insert_stock():
 
 
 async def insert_data():
+    """Insert stock and predifined indicators."""
     await insert_predefined_indicators()
     await insert_stock()

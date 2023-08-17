@@ -2,6 +2,8 @@ from tortoise import fields, models
 
 
 class PredefinedReturnModel(models.Model):
+    """Data model for predefined return."""
+
     # Fields
     id = fields.IntField(pk=True)
     name = fields.CharField(max_length=255)

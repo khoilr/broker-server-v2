@@ -5,6 +5,8 @@ from pydantic import BaseModel
 
 
 class PriceInputDTO(BaseModel):
+    """DTO for price model."""
+
     symbol: str
     time_frame: Optional[str]
     from_date: Optional[str] = (datetime.now() - timedelta(days=30)).strftime(

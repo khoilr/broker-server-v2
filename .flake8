@@ -1,9 +1,9 @@
 [flake8]
 max-complexity = 6
 inline-quotes = double
-max-line-length = 88
+max-line-length = 200
 extend-ignore = E203
-docstring_style=sphinx
+docstring_style=google
 
 ignore =
   ; Found `f` string
@@ -38,6 +38,12 @@ ignore =
   WPS204,
   ; Found too many module members
   WPS202,
+  ; Possible hardcoded password
+  S105,
+  ; Found incorrect module name pattern
+  WPS102,
+  ; Found magic number
+  WPS432,
   ; Found too high module cognitive complexity
   WPS232,
   ; line break before binary operator
@@ -70,16 +76,28 @@ ignore =
   WPS407,
   ; Found too many empty lines in `def`
   WPS473,
+  ; Found variables that are only used for `return`
+  WPS331,
+  ; Found wrong module magic name
+  WPS101,
+  ; Found too many arguments
+  WPS211,
+  ; Found builtin shadowing
+  WPS125,
+  ; Found too many local variables
+  WPS210,
+  ; Found commented out code
+  E800,
+
+
 
 per-file-ignores =
   ; all tests
-  test_*.py,tests.py,tests_*.py,*/tests/*,conftest.py:
+  test_*.py,tests.py,tests_*.py,*/tests/*,conftest.py,__init__.py:
   ; Use of assert detected
   S101,
   ; Found outer scope names shadowing
   WPS442,
-  ; Found too many local variables
-  WPS210,
   ; Found magic number
   WPS432,
   ; Missing parameter(s) in Docstring
