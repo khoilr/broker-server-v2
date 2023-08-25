@@ -1,21 +1,16 @@
 import asyncio
 import json
-import time
-import sys
-import os
 
 from talipp.ohlcv import OHLCVFactory
 from aiogram import Bot
-# Get the current working directory
-current_directory = os.getcwd()
-
-# Add the current directory to sys.path
-sys.path.append(current_directory)
-from server.utils.ssi.DataStream import MarketDataStream
+from marketstream.ssi.DataStream import MarketDataStream
 from server.db.dao.strategy import StrategyDAO
 from server.db.dao.stock import StockDAO
+# import gevent.monkey
+# gevent.monkey.patch_all()
 # from server.db.dao.strategy import StrategyDAO
 from server.db.models.strategy import StrategyModel
+from tortoise import run_async
 from server.db.models.indicator import IndicatorModel
 from server.db.models.param import ParameterModel
 from server.db.models.predefined_param import PredefinedParamModel
@@ -24,22 +19,35 @@ from server.db.models.predefined_indicator import PredefinedIndicatorModel
 from server.db.models.user import UserModel
 from server.db.models.telegram import TelegramModel
 from talipp import indicators
+from loguru import logger
 from dotenv import load_dotenv
+import nest_asyncio
+asyncio.set_event_loop_policy(None)
+nest_asyncio.apply()
+import os
+
+taS = []
 
 load_dotenv()
-taS = []
 token = os.getenv("TELEGRAM_BOT_TOKEN")
-telegram_bot = Bot(token=token)  # type: ignore
+telegram_bot = Bot(token=token)
 
+stock_dao = StockDAO()
+strategy_dao = StrategyDAO()
+
+async def on_message_async(message):
+    # Handle the message asynchronously
+    print("Received message:", message)
+    # Your asynchronous message handling logic here
 
 async def notification():
-    """Notify user"""
+    """Notify user."""
     selected_channel = "B:ALL"
     data_stream = MarketDataStream(
-        on_message=on_message,
-        on_error=on_error,
+        on_message=handle_message_async,
+        on_error=on_error,  # Assuming you have defined on_error somewhere
     )
-    data_stream.start(selected_channel)
+    await data_stream.start(selected_channel)
 
 
 async def notify(strategy: StrategyModel, notification_string: str):
@@ -73,47 +81,19 @@ async def notify(strategy: StrategyModel, notification_string: str):
         pass
 
 
-def get_stock_model(symbol):
-    """Get stock model."""
-    stock_dao = StockDAO()
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    stock_object = loop.run_until_complete(stock_dao.get_by_name(symbol=symbol))
-    loop.close()
-    return stock_object
-
-
-def get_strategy_models(stock_object):
-    """Get strategy models."""
-    strategy_dao = StrategyDAO()
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    stock_object = loop.run_until_complete(strategy_dao.filter_from_stock(stock=stock_object))
-    loop.close()
-    return stock_object
-
-
-def on_message(message: dict):
-    """
-    Bot response if reveived message.
-
-    Args:
-        message (dict): Callable
-    """
-    global taS
-    # try:
+async def handle_message_async(message: dict):
     # Get symbol from message
     content = json.loads(message)["Content"]
     symbol = json.loads(content)["Symbol"]
     if symbol is None:
         return
-
     # check if the symbol exists
-    stock_object = get_stock_model(symbol=symbol)
+    stock_object = await stock_dao.get_by_symbol(symbol=symbol)
     if stock_object is None:
         return
-
-    strategies = get_strategy_models(stock_object)
+    logger.info(stock_object)
+    # strategies = await strategy_dao.filter_from_stock(stock=stock_object)
+    return
     for strategy in strategies:
         strategy: StrategyModel = strategy
         is_met_condition = True
@@ -139,6 +119,83 @@ def on_message(message: dict):
                 notification_str += f"{PredefinedIndicatorModel.get(indicators=indicator).name} {condition.change} {condition.value}\n"
                 strategy.active = False
 
+            # I literally have no idea what this section is so I let the rest for you to handle
+
+            # else:
+            #     for notified_strategy in notified_strategies:
+            #         # parse notified_strategy to dict
+            #         notified_strategy_dict = json.loads(notified_strategy)
+
+            #         # If strategy is not notified
+            #         if (
+            #             notified_strategy_dict["id"] == strategy.id
+            #             and notified_strategy_dict["active"]
+            #         ):
+            #             # Modify notified to True
+            #             notified_strategy_dict["active"] = False
+
+            #             # Modify the list in redis
+            #             # redis_db.lset(
+            #             #     symbol,
+            #             #     notified_strategies.index(notified_strategy),
+            #             #     json.dumps(notified_strategy_dict),
+            #             # )
+
+            #             break
+        if is_met_condition:
+            asyncio.run(notify(strategy=strategy, notification_string=notification_str))
+
+    # except Exception:
+    #     pass
+
+async def on_message(message: dict):
+    """
+    Bot response if reveived message.
+
+    Args:
+        message (dict): Callable
+    """
+    await handle_message_async(message)
+    return
+    logger.info("BBBBBBBBBBBBBB")
+
+    # try:
+    # Get symbol from message
+    content = json.loads(message)["Content"]
+    symbol = json.loads(content)["Symbol"]
+    if symbol is None:
+        return
+    # check if the symbol exists
+    stock_dao = StockDAO()
+    stock_object = stock_dao.get_by_name(symbol=symbol)
+    if stock_object is None:
+        return
+    strategy_dao = StrategyDAO()
+    strategies = strategy_dao.filter_from_stock(stock=stock_object)
+    for strategy in strategies:
+        strategy: StrategyModel = strategy
+        is_met_condition = True
+        notification_str = ""
+
+        # loop indicators
+        for indicator in strategy.indicators:
+            # Annotate indicator
+            indicator: IndicatorModel = indicator
+            params = get_params(indicator=indicator, content=content)
+
+            condition: ConditionModel = indicator.condition
+
+            # get technical analysis
+            output = get_output_ta(
+                indicator=indicator,
+                params=params,
+                source=condition.source,
+            )
+
+            is_met_condition = is_meet_condition(output, condition)
+            if is_met_condition:
+                notification_str += f"{PredefinedIndicatorModel.get(indicators=indicator).name} {condition.change} {condition.value}\n"
+                strategy.active = False
 
             # I literally have no idea what this section is so I let the rest for you to handle
 
@@ -291,7 +348,3 @@ def get_params(indicator: IndicatorModel, content: dict) -> dict:
         params["input_values"] = [content[params["input_values"].title()]]
 
     return params
-
-
-if __name__ == "__main__":
-    asyncio.run(notification())

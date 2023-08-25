@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from server.db.models.stock import StockModel
 
@@ -32,9 +32,9 @@ class StockDAO:
             en_name=en_name,
         )
 
-    async def get_by_name(self, symbol: str) -> StockModel:
+    async def get_by_symbol(self, symbol: Optional[str] = None) -> StockModel:
         """
-        Get Stock DAO by name.
+        Get Stock DAO by symbol.
 
         Args:
             symbol (str): stock symbol
@@ -42,9 +42,12 @@ class StockDAO:
         Returns:
             StockModel: stock object
         """
-        return await StockModel.get(symbol=symbol)
+        query = StockModel.all()
+        if symbol:
+            query = query.filter(symbol=symbol).first()
+        return await query
 
-    async def get(self, market: str, symbol: str) -> StockModel:
+    async def get(self, market: Optional[str] = None, symbol: Optional[str] = None) -> StockModel:
         """
         Get Stock object.
 

@@ -22,14 +22,14 @@ from prometheus_fastapi_instrumentator.instrumentation import (
 
 from server.services.redis.lifetime import init_redis, shutdown_redis
 from server.settings import settings
+from server.utils.start_up import insert_data
 
 
 def setup_opentelemetry(app: FastAPI) -> None:  # pragma: no cover
     """
     Enables opentelemetry instrumentation.
 
-    Args:
-        app (FastAPI): current application
+    :param app: current application.
     """
     if not settings.opentelemetry_endpoint:
         return
@@ -86,8 +86,7 @@ def stop_opentelemetry(app: FastAPI) -> None:  # pragma: no cover
     """
     Disables opentelemetry instrumentation.
 
-    Args:
-        app (FastAPI): current application.
+    :param app: current application.
     """
     if not settings.opentelemetry_endpoint:
         return
@@ -101,8 +100,7 @@ def setup_prometheus(app: FastAPI) -> None:  # pragma: no cover
     """
     Enables prometheus integration.
 
-    Args:
-        app (FastAPI): current application.
+    :param app: current application.
     """
     PrometheusFastApiInstrumentator(should_group_status_codes=False).instrument(
         app,
@@ -118,11 +116,8 @@ def register_startup_event(
     This function uses fastAPI app to store data
     in the state, such as db_engine.
 
-    Args:
-        app (FastAPI): the fastAPI application.
-
-    Returns:
-        Callable[[], Awaitable[None]]: function that actually performs actions.
+    :param app: the fastAPI application.
+    :return: function that actually performs actions.
     """
 
     @app.on_event("startup")
@@ -145,11 +140,8 @@ def register_shutdown_event(
     """
     Actions to run on application's shutdown.
 
-    Args:
-        app (FastAPI): fastAPI application.
-
-    Returns:
-        Callable[[], Awaitable[None]]: function that actually performs actions.
+    :param app: fastAPI application.
+    :return: function that actually performs actions.
     """
 
     @app.on_event("shutdown")

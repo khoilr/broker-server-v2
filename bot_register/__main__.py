@@ -2,11 +2,10 @@ import asyncio
 from concurrent import futures
 from datetime import datetime
 
-from bot.command_handlers import command_handlers
+from bot_register.command_handlers import command_handlers
 from dotenv import load_dotenv
 from loguru import logger
 from tortoise import Tortoise
-from bot.notify import notification
 
 from server.db.config import TORTOISE_CONFIG
 
@@ -26,13 +25,9 @@ async def main():
 
     cm = await command_handlers()
 
-    with futures.ThreadPoolExecutor() as pool:
-        loop = asyncio.get_event_loop()
-        notification_task = loop.run_in_executor(pool, notification)
-
     # Run tasks
     await asyncio.gather(
-        *[cm, notification_task]
+        *[cm]#, notification_task]
     )
 
 

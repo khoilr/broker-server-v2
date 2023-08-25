@@ -6,9 +6,9 @@ class StrategyModel(models.Model):
 
     # Fields
     id = fields.IntField(pk=True)
+    notified = fields.BooleanField(null=True)
     created_at = fields.DatetimeField(auto_now_add=True)
     updated_at = fields.DatetimeField(auto_now=True)
-    notified = fields.BooleanField(null=True)
 
     # Relationships
     user = fields.ForeignKeyField("models.UserModel", related_name="strategies")

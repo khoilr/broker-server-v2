@@ -4,7 +4,7 @@ import shutil
 
 import uvicorn
 
-from server.__rocketry__ import app as app_rocketry
+# from server.__rocketry__ import app as app_rocketry
 from server.settings import settings
 
 
@@ -53,7 +53,7 @@ class Server(uvicorn.Server):
         Returns:
             None: None
         """
-        app_rocketry.session.shut_down()
+        # app_rocketry.session.shut_down()
         return super().handle_exit(sig, frame)
 
 

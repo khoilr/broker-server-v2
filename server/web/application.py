@@ -58,7 +58,6 @@ def get_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-
     # Configures tortoise orm
     register_tortoise(
         app,

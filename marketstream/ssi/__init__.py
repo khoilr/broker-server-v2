@@ -10,12 +10,12 @@ Returns:
 import json
 from typing import Union
 
-# import gevent.monkey
-# gevent.monkey.patch_all()
+import gevent.monkey
+gevent.monkey.patch_all()
 
 import requests
 
-from server.utils.ssi import config, constants
+from marketstream.ssi import config, constants
 
 
 class SSI(object):

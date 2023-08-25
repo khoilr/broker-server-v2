@@ -43,6 +43,7 @@ class StrategyDAO:
         Returns:
             list[StrategyModel]: list of strategy objects of given user
         """
-        return await StrategyModel.filter(
-            stocks=[stock],
+        query = StrategyModel.all()
+        return await query.filter(
+            stocks=stock,
         )

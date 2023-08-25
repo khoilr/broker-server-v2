@@ -12,7 +12,7 @@ from server.db.dao.predefined_return import PredefinedReturnDAO
 from server.db.dao.stock import StockDAO
 from server.db.models.predefined_indicator import PredefinedIndicatorModel
 from server.utils.ssi.DataClient import DataClient
-
+from loguru import logger
 # Get the current working directory
 current_directory = os.getcwd()
 

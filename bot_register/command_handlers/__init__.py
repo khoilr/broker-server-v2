@@ -1,32 +1,20 @@
-"""
-Command handlers.
-
-Returns:
-    None: None
-"""
-
 import asyncio
 import os
+from asyncio import Task
 
 from aiogram import Bot, Dispatcher
+from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from bot.command_handlers.commands import start
+from bot_register.command_handlers.commands import start
 from loguru import logger
 
 
-async def command_handlers() -> asyncio.Task:
-    """
-    Register handler for message.
-
-    Returns:
-        Task: Coroutine
-    """
+async def command_handlers() -> Task:
     # Init bot
-    token = os.getenv("TELEGRAM_BOT_TOKEN")
-    bot = Bot(token=token)  # type: ignore
-    logger.info(token)
+    bot = Bot(token=os.getenv("TELEGRAM_BOT_TOKEN"))  # type: ignore
     storage = MemoryStorage()
     dp = Dispatcher(bot, storage=storage)
+    dp.middleware.setup(LoggingMiddleware())
 
     # Log bot info
     bot_info = await bot.get_me()
@@ -34,5 +22,5 @@ async def command_handlers() -> asyncio.Task:
 
     # Register command handlers
     dp.register_message_handler(start, commands=["start"])
-
-    return asyncio.create_task(dp.start_polling())
+    logger.info("Bot started!")
+    await dp.start_polling()

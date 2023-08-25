@@ -14,7 +14,7 @@ COPY pyproject.toml poetry.lock /app/src/
 WORKDIR /app/src
 
 # Installing requirements
-RUN poetry install --only main
+RUN poetry install
 # Removing gcc
 RUN apt-get purge -y \
   gcc \
@@ -22,12 +22,12 @@ RUN apt-get purge -y \
 
 # Copying actuall application
 COPY . /app/src/
-RUN poetry install --only main
+RUN poetry install
 
 # Install ssi_fc_data
 RUN pip install /app/src/packages/ssi_fc_data-2.0.0/ssi_fc_data-2.0.0.tar.gz
 
-CMD ["/usr/local/bin/python", "-m", "server"]
+CMD ["/usr/local/bin/python", "-m", "marketstream"]
 
 FROM prod as dev
 
